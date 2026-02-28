@@ -162,7 +162,7 @@ const Message = function Message({ message, setSelectedReplyMessage }) {
                   message.pending
                     ? message.file_path
                     // : `http://localhost:8000/storage/${message.file_path}`
-                    : `https://laravelwhatsappdeploy-production.up.railway.app/storage/${message.file_path}`
+                    : `https://whatsappback01-production.up.railway.app/storage/${message.file_path}`
                 }
                 className="rounded-lg max-w-xs w-full"
                 loading="lazy"

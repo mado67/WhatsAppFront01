@@ -41,7 +41,7 @@ export const getChats = async () => {
 };
 
 export const addChat = async (payload) => {
-    const { data } = await axiosInstance.post("/chats/private", { user_one_id: payload.user_one_id, other_user_ids: payload.other_user_ids });
+    const { data } = await axiosInstance.post("/chats/private", { name: 'chat', user_one_id: payload.user_one_id, other_user_ids: payload.other_user_ids });
     return data;
 };
 
