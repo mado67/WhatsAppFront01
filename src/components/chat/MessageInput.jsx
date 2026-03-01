@@ -214,12 +214,12 @@ export default function MessageInput({
   // =============================
   return (
     <div
-      className={`bg-[#202c33] p-3 relative ${profileOpen ? "w-[66.66%]" : "w-full"
+      className={`bg-[#202c33] p-3 relative ${profileOpen ? "w-[66.66%]" : "w-full p-2"
         }`}
     >
       <form
         onSubmit={submitText}
-        className="flex bg-[#111b21] items-center gap-2 rounded-2xl relative pl-12"
+        className="flex bg-[#111b21] items-center gap-2 rounded-2xl relative pl-12 w-[90%] m-auto"
       >
         {/* file */}
         <button

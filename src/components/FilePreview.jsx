@@ -25,16 +25,16 @@ function FilePreview({ message, url }) {
 
             return (
                 <div className="max-w-[340px] text-white">
-                    <div className="bg-[#202c33] rounded-2xl p-3 flex items-center gap-8 shadow-md">
+                    <div className="bg-[#202c33] rounded-2xl p-3 flex items-center md:gap-8 gap-2 shadow-md sm:flex-row flex-col">
                         {/* File Info */}
                         <div className="flex-1 min-w-0 flex items-center gap-2">
-                            <div className="w-10 h-10 rounded-lg bg-[#2a3942] flex items-center justify-center shrink-0">
-                                <FileText size={20} className="text-gray-300" />
+                            <div className="w-10 h-10 rounded-lg bg-[#2a3942] flex items-center justify-center shrink-0 md:block hidden">
+                                <FileText size={20} className="text-gray-300 m-auto my-2" />
                             </div>
 
                             <div className="min-w-0">
                                 <p className="text-xs text-gray-400">{message?.file_name?.split(".")[1]} • {(message?.file_size / 1024 / 1024).toFixed(2)} MB</p>
-                                <p className="text-sm font-medium truncate">{message?.file_name}</p>
+                                <p className="text-sm font-medium truncate md:text-sm text-[8px] ">{message?.file_name}</p>
                             </div>
                         </div>
 

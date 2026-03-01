@@ -151,7 +151,7 @@ const Message = function Message({ message, setSelectedReplyMessage }) {
           {/* text / image */}
           <div className="flex items-center justify-end gap-2">
             {message.is_deleted ? (
-              <p className="text-gray-400 italic">
+              <p className="text-gray-400 italic md:text-sm text-[10px]">
                 This message was deleted
               </p>
             ) : message.type === "text" ? (
