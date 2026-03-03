@@ -219,7 +219,7 @@ export default function MessageInput({
     >
       <form
         onSubmit={submitText}
-        className="flex bg-[#111b21] items-center gap-2 rounded-2xl relative pl-12 w-[90%] m-auto"
+        className="flex bg-[#111b21] items-center gap-2 rounded-2xl relative pl-12 md:w-full w-[90%] m-auto"
       >
         {/* file */}
         <button
