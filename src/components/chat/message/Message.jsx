@@ -149,13 +149,13 @@ const Message = function Message({ message, setSelectedReplyMessage }) {
           )}
 
           {/* text / image */}
-          <div className="flex items-center justify-end gap-2">
+          <div className="flex items-center sm:flex-row flex-col justify-end sm:gap-2 gap-1">
             {message.is_deleted ? (
-              <p className="text-gray-400 italic md:text-sm text-[10px]">
+              <p className="text-gray-400 italic md:text-sm text-[10px] ">
                 This message was deleted
               </p>
             ) : message.type === "text" ? (
-              <p>{message.body}</p>
+              <p className="self-start md:text-sm text-[14px]">{message.body}</p>
             ) : message.type === "image" ? (
               <img
                 src={
