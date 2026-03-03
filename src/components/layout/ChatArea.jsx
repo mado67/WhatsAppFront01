@@ -90,7 +90,7 @@ export default function ChatArea() {
 
   return (
     <main
-      className={` flex-1 flex scrollbar-hover flex-col bg-[#0b141a] relative ${showChat ? "translate-x-0" : "translate-x-full md:translate-x-0"} transform transition-transform duration-300 ease-in-out`}
+      className={` flex-1 flex scrollbar-hover flex-col bg-[#0b141a] max-w-[100vw] relative ${showChat ? "translate-x-0" : "translate-x-full md:translate-x-0"} transform transition-transform duration-300 ease-in-out`}
     >
       {/* Header */}
       <div
