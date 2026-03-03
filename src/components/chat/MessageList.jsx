@@ -6,9 +6,9 @@ export default function MessageList({ selectedReplyMessage, setSelectedReplyMess
   const { messages } = useMessages();
   const bottomRef = useRef(null);
   // 🔥 Auto scroll when messages change
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  // useEffect(() => {
+  //   bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, [messages]);
 
   return (
     <div className="flex-1 p-4 overflow-y-auto space-y-2">
