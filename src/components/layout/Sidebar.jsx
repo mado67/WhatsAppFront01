@@ -24,19 +24,21 @@ import { useActiveChat } from "../../context/ActiveChatContext";
 import { useAuth } from "../../context/AuthContext";
 import { useChatUI } from "../../context/ChatUIContext";
 import echo from "../../lib/bootstrap";
+import NewContactModal from "../NewContactModal";
 
 export default function Sidebar({ setIsMyProfile, isMyProfile }) {
   const { chats, setChats } = useChatList();
   const { setActiveChat, showChat } = useActiveChat();
   const { selectionChatMode, clearChatSelection, selectedChats } = useChatUI();
   const { user } = useAuth();
+  const [contacts, setContacts] = useState([])
 
   const [open, setOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [openNewChat, setOpenNewChat] = useState(false);
   const [chatOption, setChatOption] = useState("");
-
+  const [opennewContactModal, setopennewContactModal] = useState(false);
   const menuRef = useRef(null);
 
   /* ================= MEMO FILTER ================= */
@@ -154,7 +156,7 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
       `}
     >
       {openNewChat && (
-        <NewChatModal onClose={() => setOpenNewChat(false)} />
+        <NewChatModal onClose={() => setOpenNewChat(false)} setContacts={setContacts} contacts={contacts} />
       )}
 
       {/* Header */}
@@ -178,7 +180,11 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
           {open && (
             <div className="absolute right-0 top-10 w-48 bg-[#233138] shadow-lg rounded-md text-sm z-50 rounded-b-lg px-2 py-4">
               <MenuItem text="New Chat" icon={<MessageSquareTextIcon size={16} />} onClick={handleNewChat} />
-              <MenuItem text="Chat info" icon={<UserIcon size={16} />} />
+              <MenuItem text="New Contact" icon={<UserIcon size={16} />} onClick={() => {
+                setOpen(false);
+                setopennewContactModal(true)
+              }}
+              />
               <MenuItem text="Mute Chats" icon={<BellOffIcon size={16} />} />
               <MenuItem text="Clear Chats" danger icon={<MessageSquareTextIcon size={16} />} />
               <MenuItem text="Logout" danger icon={<LogOutIcon size={16} />} onClick={handleLogout} />
@@ -234,6 +240,11 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
           handleDelete={handleDelete}
         />
       )}
+      <NewContactModal
+        open={opennewContactModal}
+        onClose={() => setopennewContactModal(false)}
+        setContacts={setContacts}
+      />
     </aside>
   );
 }

@@ -107,7 +107,7 @@ export function MessageProvider({ children }) {
 
     channel.listenForWhisper("typing", (e) => {
       if (e.user_id === user.id) return;
-
+      console.log('typing')
       setTypingUser(e);
       clearTimeout(typingTimeoutRef.current);
       typingTimeoutRef.current = setTimeout(
@@ -171,7 +171,7 @@ export function MessageProvider({ children }) {
           type === "file" || type === "excel"
             ? (
               await axios.post(
-                import.meta.env.VITE_API_URL + "/api/messages",
+                import.meta.env.VITE_APP_URL + "/api/messages",
                 payload,
                 {
                   headers: {
@@ -242,7 +242,6 @@ export function MessageProvider({ children }) {
 
   const sendTyping = useCallback(() => {
     if (!activeChat) return;
-
     echo.private(`chat.${activeChat.id}`).whisper(
       "typing",
       {

@@ -6,7 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useChatList } from "../../context/ChatListContext";
 import ExcelUpload from "../ExcelUpload";
 
-export default function NewChatModal({ onClose }) {
+export default function NewChatModal({ onClose, contacts, setContacts }) {
     const [name, setName] = useState("");
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState(null);
@@ -16,7 +16,6 @@ export default function NewChatModal({ onClose }) {
     const [selected, setSelected] = useState([]);
     const { user } = useAuth()
     const { setChats } = useChatList()
-    const [contacts, setContacts] = useState([])
 
 
     const filteredContacts = contacts?.filter((conv) => {
@@ -80,8 +79,8 @@ export default function NewChatModal({ onClose }) {
     };
 
     return (
-        <div ref={menuRef} className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-[#202c33]  max-w-md w-[90%] rounded-2xl shadow-xl p-6 relative animate-fadeIn">
+        <div ref={menuRef} className="fixed  inset-0  bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-[#202c33] overflow-y-auto  h-[90vh]  max-w-md w-[90%] rounded-2xl shadow-xl p-6 relative animate-fadeIn">
 
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6 ">
