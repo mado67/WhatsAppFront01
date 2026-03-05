@@ -3,8 +3,8 @@ export default function Avatar({ src, onClick }) {
     (
       src ?
         <img
-          src={`http://127.0.0.1:8000/storage/${src}`}
-          // src={`https://whatsappback01-production.up.railway.app/storage/${src}`}
+          src={`${import.meta.env.VITE_APP_URL}/storage/${src}`}
+          // src={`${import.meta.env.VITE_APP_URL}/storage/${src}`}
           className="w-10 h-10 rounded-full object-cover cursor-pointer"
           alt="avatar"
           onClick={onClick}

@@ -224,7 +224,7 @@ export function ChatProvider({ children }) {
 
       if (type === "file") {
         const response = await axios.post(
-          "http://localhost:8000/api/messages",
+          `${import.meta.env.VITE_APP_URL}/api/messages`,
           payload,
           {
             headers: {

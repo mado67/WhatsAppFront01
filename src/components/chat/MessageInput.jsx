@@ -8,7 +8,6 @@ import ForwardMessages from "./ForwardMessages";
 import { useChatUI } from "../../context/ChatUIContext";
 import { useActiveChat } from "../../context/ActiveChatContext";
 import { useMessages } from "../../context/MessageContext";
-import { useChatList } from "../../context/ChatListContext";
 
 export default function MessageInput({
   chatId,
@@ -24,10 +23,9 @@ export default function MessageInput({
 
   const { selectionMode, profileOpen, selectedMessages, clearSelection, setSelectedMessages, setSelectionMode } =
     useChatUI();
-  const { isUserOnline } = useChatList();
 
-  const { activeChat, otherUser, UserExistInChat } = useActiveChat();
-  const { handleSendMessage, sendTyping, setMessages, messages } =
+  const { activeChat } = useActiveChat();
+  const { handleSendMessage, sendTyping, setMessages, messages, otherUser, UserExistInChat, isUserOnline } =
     useMessages();
 
   // =============================

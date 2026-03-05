@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { getMessages, sendMessage } from "../api/chatApi";
+import { getMessages, markAsDeliveredApi, markAsSeenApi, sendMessage } from "../api/chatApi";
 import echo from "../lib/bootstrap";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
@@ -21,14 +21,17 @@ export function MessageProvider({ children }) {
   const messagesCacheRef = useRef(new Map());
   const loadingChatIdRef = useRef(null);
   const { user, token } = useAuth();
-  const { activeChat, UserExistInChat, otherUser } =
+  const { activeChat } =
     useActiveChat();
-  const { setChats, isUserOnline } = useChatList();
+  const { setChats } = useChatList();
 
   const [messages, setMessages] = useState([]);
   const [loadingMessages, setLoadingMessages] =
     useState(false);
   const [typingUser, setTypingUser] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [usersInChat, setUsersInChat] = useState([]);
+
 
   const typingTimeoutRef = useRef(null);
   const activeChannelRef = useRef(null);
@@ -83,6 +86,92 @@ export function MessageProvider({ children }) {
   }, []);
 
   /* ================= REALTIME ================= */
+
+
+  /* ================= PRESENCE ================= */
+
+  /* ================= SEEN ================= */
+
+  const handleSeen = useCallback(async () => {
+    if (!activeChat) return;
+    await markAsSeenApi(activeChat.id);
+  }, [activeChat]);
+
+
+
+  useEffect(() => {
+    if (!activeChat) return;
+
+    const presence = echo.join(
+      `presence.chat.${activeChat.id}`
+    );
+
+    presence.here((users) => {
+      setUsersInChat(users);
+      handleSeen();
+    });
+
+    presence.joining((user) => {
+      setUsersInChat((prev) => [...prev, user]);
+      setMessages((prev) => (
+        prev.map((m) => {
+          if (!m.is_seen) {
+            return { ...m, is_seen: true }
+          }
+          else {
+            return m;
+          }
+        })
+      ))
+    });
+
+    presence.leaving((user) => {
+      setUsersInChat((prev) =>
+        prev.filter((u) => u.id !== user.id)
+      );
+    });
+
+    return () =>
+      echo.leave(`presence.chat.${activeChat.id}`);
+  }, [activeChat, handleSeen]);
+
+
+
+  /* ================= GLOBAL PRESENCE ================= */
+
+  useEffect(() => {
+    const channel = echo.join("online");
+
+    channel.here(async (users) => {
+      setOnlineUsers(users);
+      await markAsDeliveredApi();
+    });
+
+    channel.joining((user) => {
+      setOnlineUsers((prev) => [...prev, user]);
+      setMessages((prev) => (
+        prev.map((m) => {
+          if (!m.is_delivered) {
+            return { ...m, is_delivered: true }
+          }
+          else {
+            return m;
+          }
+        })
+      )
+      )
+    });
+
+    channel.leaving((user) => {
+      setOnlineUsers((prev) =>
+        prev.filter((u) => u.id !== user.id)
+      );
+    });
+
+    return () => echo.leave("online");
+  }, []);
+
+
 
   useEffect(() => {
     if (!activeChat) return;
@@ -233,8 +322,6 @@ export function MessageProvider({ children }) {
       user,
       token,
       setChats,
-      UserExistInChat,
-      isUserOnline,
     ]
   );
 
@@ -250,6 +337,35 @@ export function MessageProvider({ children }) {
     );
   }, [activeChat, user.id]);
 
+
+  /* ================= MEMOS ================= */
+
+  const onlineIds = useMemo(
+    () => new Set(onlineUsers.map((u) => u.id)),
+    [onlineUsers]
+  );
+
+
+  const isUserOnline = useCallback(
+    (id) => onlineIds.has(id),
+    [onlineIds]
+  );
+
+  const otherUser = useMemo(() => {
+    if (!activeChat) return null;
+    return activeChat.users.find(
+      (u) => u.id !== user?.id
+    );
+  }, [activeChat, user?.id]);
+
+  const UserExistInChat = useMemo(() => {
+    if (!otherUser) return false;
+    return usersInChat.some(
+      (u) => u.id === otherUser.id
+    );
+  }, [usersInChat, otherUser]);
+
+
   const value = useMemo(
     () => ({
       messages,
@@ -259,6 +375,12 @@ export function MessageProvider({ children }) {
       typingUser,
       handleSendMessage,
       sendTyping,
+      onlineUsers,
+      isUserOnline,
+      UserExistInChat,
+      usersInChat,
+      otherUser,
+
     }),
     [
       messages,
@@ -267,6 +389,12 @@ export function MessageProvider({ children }) {
       typingUser,
       handleSendMessage,
       sendTyping,
+      onlineUsers,
+      isUserOnline,
+      UserExistInChat,
+      usersInChat,
+      otherUser,
+
     ]
   );
 

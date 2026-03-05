@@ -19,11 +19,11 @@ import { useMessages } from "../../context/MessageContext";
 import { useChatUI } from "../../context/ChatUIContext";
 
 export default function ChatArea() {
-  const { setConversations, onlineUsers } = useChatList();
+  const { setConversations } = useChatList();
   const { activeChat, setActiveChat, showChat, setShowChat } = useActiveChat();
   const { user } = useAuth();
   const { profileOpen, openProfile } = useChatUI();
-  const { loadingMessages } = useMessages();
+  const { loadingMessages, onlineUsers } = useMessages();
 
   const closeChat = () => {
     setShowChat(false);

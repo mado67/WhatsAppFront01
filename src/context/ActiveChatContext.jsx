@@ -6,7 +6,7 @@ import {
     useMemo,
     useState,
 } from "react";
-import { openChatApi, markAsSeenApi } from "../api/chatApi";
+import { openChatApi } from "../api/chatApi";
 import echo from "../lib/bootstrap";
 import { useAuth } from "./AuthContext";
 import { useChatList } from "./ChatListContext";
@@ -18,7 +18,6 @@ export function ActiveChatProvider({ children }) {
 
     const [activeChat, setActiveChat] = useState(null);
     const [showChat, setShowChat] = useState(false);
-    const [usersInChat, setUsersInChat] = useState([]);
     const { setChats } = useChatList();
 
     /* ================= OPEN CHAT ================= */
@@ -29,41 +28,8 @@ export function ActiveChatProvider({ children }) {
         setShowChat(true);
     }, []);
 
-    /* ================= SEEN ================= */
 
-    const handleSeen = useCallback(async () => {
-        if (!activeChat) return;
-        await markAsSeenApi(activeChat.id);
-    }, [activeChat]);
 
-    /* ================= PRESENCE ================= */
-
-    useEffect(() => {
-        if (!activeChat) return;
-
-        const presence = echo.join(
-            `presence.chat.${activeChat.id}`
-        );
-
-        presence.here((users) => {
-            setUsersInChat(users);
-            handleSeen();
-        });
-
-        presence.joining((user) => {
-            setUsersInChat((prev) => [...prev, user]);
-            handleSeen();
-        });
-
-        presence.leaving((user) => {
-            setUsersInChat((prev) =>
-                prev.filter((u) => u.id !== user.id)
-            );
-        });
-
-        return () =>
-            echo.leave(`presence.chat.${activeChat.id}`);
-    }, [activeChat, handleSeen]);
 
 
     /* ---------------- USER CHANNEL ---------------- */
@@ -74,7 +40,6 @@ export function ActiveChatProvider({ children }) {
 
         channel.listen("MessageSent", (e) => {
             if (activeChat && activeChat.id === e.chat_id) return;
-            console.log(e);
             setChats((prevChats) => {
                 const chatIndex = prevChats.findIndex(
                     (chat) => chat.id === e.chat_id
@@ -102,19 +67,7 @@ export function ActiveChatProvider({ children }) {
 
     /* ================= MEMOS ================= */
 
-    const otherUser = useMemo(() => {
-        if (!activeChat) return null;
-        return activeChat.users.find(
-            (u) => u.id !== user?.id
-        );
-    }, [activeChat, user?.id]);
 
-    const UserExistInChat = useMemo(() => {
-        if (!otherUser) return false;
-        return usersInChat.some(
-            (u) => u.id === otherUser.id
-        );
-    }, [usersInChat, otherUser]);
 
     const value = useMemo(
         () => ({
@@ -122,17 +75,11 @@ export function ActiveChatProvider({ children }) {
             setActiveChat,
             showChat,
             openChat,
-            usersInChat,
-            otherUser,
-            UserExistInChat,
             setShowChat
         }),
         [
             activeChat,
             showChat,
-            usersInChat,
-            otherUser,
-            UserExistInChat,
             openChat,
             setShowChat
         ]

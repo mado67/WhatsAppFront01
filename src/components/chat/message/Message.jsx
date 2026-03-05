@@ -1,6 +1,7 @@
 import { memo, useEffect, useRef, useState, useCallback } from "react";
 import {
   ChevronDown,
+  FileText,
   Forward,
 } from "lucide-react";
 import { useChatUI } from "../../../context/ChatUIContext";
@@ -130,7 +131,22 @@ const Message = function Message({ message, setSelectedReplyMessage }) {
             <div className="bg-[#103E2C] w-full p-1 rounded-md border-l-3 border-green-400">
               <h3 className="text-sm text-green-400 mb-1">You</h3>
               <div className="text-sm text-gray-400 mb-1">
-                {message.reply_message?.body}
+                {message.type == 'text' && message.reply_message?.body ?
+                  message.reply_message?.body
+                  : message.reply_message?.type == 'image' ? (
+                    <img src={`${import.meta.env.VITE_APP_URL}/storage/${message.reply_message?.file_path}`} className=" w-15 h-[90%]" />
+                  ) : (
+                    <div className="flex-1 min-w-0 flex items-center gap-2">
+                      <div className="w-10 h-10 rounded-lg bg-[#2a3942] flex items-center justify-center shrink-0 md:block hidden">
+                        <FileText size={20} className="text-gray-300 m-auto my-2" />
+                      </div>
+
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium truncate md:text-sm text-[8px] mr-1">{message.reply_message?.file_name}</p>
+                      </div>
+                    </div>
+                  )
+                }
               </div>
             </div>
           )}
@@ -155,14 +171,14 @@ const Message = function Message({ message, setSelectedReplyMessage }) {
                 This message was deleted
               </p>
             ) : message.type === "text" ? (
-              <p className="self-start md:text-sm text-[14px]">{message.body}</p>
+              <p className="self-start md:text-sm text-[14px] mr-auto">{message.body}</p>
             ) : message.type === "image" ? (
               <img
                 src={
                   message.pending
                     ? message.file_path
-                    : `http://localhost:8000/storage/${message.file_path}`
-                  // : `https://whatsappback01-production.up.railway.app/storage/${message.file_path}`
+                    : `${import.meta.env.VITE_APP_URL}/storage/${message.file_path}`
+                  // : `${import.meta.env.VITE_APP_URL}/storage/${message.file_path}`
                 }
                 className="rounded-lg max-w-xs w-full"
                 loading="lazy"

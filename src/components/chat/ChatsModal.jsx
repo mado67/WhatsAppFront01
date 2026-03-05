@@ -10,8 +10,8 @@ import { useMessages } from "../../context/MessageContext";
 
 export default function ChatsModal({ onClose }) {
     const { selectedChats, setSelectedChats, selectedMessages, setSelectionMode, setSelectedMessages } = useChatUI()
-    const { userIsOnline, UserExistInChat, activeChat } = useActiveChat()
-    const { setMessages } = useMessages()
+    const { userIsOnline, activeChat } = useActiveChat()
+    const { setMessages, UserExistInChat } = useMessages()
     const { chats } = useChatList()
     const { user } = useAuth()
     const [search, setSearch] = useState("");
@@ -25,10 +25,10 @@ export default function ChatsModal({ onClose }) {
         const response = await forwardMessage({
             target_chat_ids: selectedChats, message_ids: selectedMessages,
             is_delivered: userIsOnline ? 1 : 0,
-            is_seen: UserExistInChat?.id ? 1 : 0,
+            is_seen: UserExistInChat ? 1 : 0,
         })
         if (selectedChats.includes(activeChat.id))
-            setMessages((prev) => [...prev, { ...response.messages[0], chat_id: activeChat.id }])
+            setMessages((prev) => [...prev, ...response.messages.map(m => ({ ...m, chat_id: activeChat.id }))])
         setLoading(false)
         handleClose();
         setSelectionMode(false)
