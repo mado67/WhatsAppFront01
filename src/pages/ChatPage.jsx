@@ -1,14 +1,15 @@
-import Sidebar from "../components/layout/Sidebar";
-import ChatArea from "../components/layout/ChatArea";
-import { useState } from "react";
+
 import { AuthProvider } from "../context/AuthContext";
 import { ChatListProvider } from "../context/ChatListContext";
-import { ActiveChatProvider } from "../context/ActiveChatContext";
+import { ActiveChatProvider, useActiveChat } from "../context/ActiveChatContext";
 import { MessageProvider } from "../context/MessageContext";
 import { ChatUIProvider } from "../context/ChatUIContext";
+import MainChatPageSection from "../components/chat/MainChatPageSection";
+import MainSettingsSection from "../components/MainSettingsSection";
 
 export default function ChatPage() {
-  const [isMyProfile, setIsMyProfile] = useState(false);
+
+ 
 
   return (
     <AuthProvider>
@@ -16,11 +17,8 @@ export default function ChatPage() {
         <ActiveChatProvider>
           <MessageProvider>
             <ChatUIProvider>
-              <div className="h-[100dvh] w-screen bg-[#0b141a] text-white flex overflow-hidden">
-                {/* <InfoPanel /> */}
-                <Sidebar isMyProfile={isMyProfile} setIsMyProfile={setIsMyProfile} />
-                <ChatArea />
-              </div>
+            {true && <MainChatPageSection />}
+           {false && <MainSettingsSection />}
             </ChatUIProvider>
           </MessageProvider>
         </ActiveChatProvider>
