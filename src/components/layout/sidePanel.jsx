@@ -1,40 +1,45 @@
 import {
-  MessageSquare,
-  Circle,
   Users,
   Settings,
   Image,
+  MessageSquareText,
+  CircleChevronLeft,
+  CircleChevronRight,
 } from "lucide-react";
-import { useState } from "react";
 import { useActiveChat } from "../../context/ActiveChatContext";
+import { useStackNavigation } from "../../context/StackNavigationContext";
+import Avatar from "../common/Avatar";
+import { useAuth } from "../../context/AuthContext";
 
-export default function SidePanel() {
-  const [active, setActive] = useState("chat");
-  const {  showChat } = useActiveChat();
-
+export default function SidePanel({ setIsMyProfile }) {
+  const { user } = useAuth();
+  const { showChat } = useActiveChat();
+  const { push, back, next, canGoBack, canGoNext, current } = useStackNavigation();
   const menu = [
-    { id: "chat", icon: MessageSquare },
-    { id: "status", icon: Circle },
-    { id: "calls", icon: Circle },
+    { id: "ChatList", icon: MessageSquareText },
     { id: "communities", icon: Users },
+    { id: "Gallary", icon: Image },
+    { id: "Settings", icon: Settings },
   ];
 
   return (
     <>
       {/* DESKTOP SidePanel */}
       <div className='hidden  md:flex fixed left-0 top-0 h-screen w-20 bg-[#202C33] flex-col items-center border-r border-[#2A3942] py-4 justify-between'>
-        
+
         {/* Top Icons */}
         <div className="flex flex-col items-center gap-6">
           {menu.map((item) => {
             const Icon = item.icon;
-            const isActive = active === item.id;
+            const isActive = current === item.id;
 
             return (
               <button
                 key={item.id}
-                onClick={() => setActive(item.id)}
-                className="relative flex items-center justify-center w-12 h-12 rounded-xl hover:bg-[#2A3942] transition"
+                onClick={() => {
+                  push(item.id)
+                }}
+                className="relative flex items-center justify-center w-12 h-12 rounded-xl hover:bg-[#2A3942] transition cursor-pointer"
               >
                 <Icon
                   size={22}
@@ -57,34 +62,41 @@ export default function SidePanel() {
 
         {/* Bottom Section */}
         <div className="flex flex-col items-center gap-6">
-          <button className="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-[#2A3942]">
+          {/* <button className="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-[#2A3942] cursor-pointer">
             <Image size={22} className="text-gray-400" />
           </button>
 
-          <button className="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-[#2A3942]">
+          <button className="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-[#2A3942] cursor-pointer">
             <Settings size={22} className="text-gray-400" />
-          </button>
+          </button> */}
 
-          {/* Profile Avatar */}
-          <img
-            src="https://i.pravatar.cc/100"
-            alt=""
-            className="w-10 h-10 rounded-full object-cover"
-          />
+          <Avatar src={user?.avatar} onClick={() => setIsMyProfile(true)} />
         </div>
       </div>
 
       {/* MOBILE BOTTOM NAV */}
-      <div className={`md:hidden fixed ${showChat&&'hidden'} bottom-0 left-0 right-0 h-16 bg-[#202C33] flex items-center justify-around border-t border-[#2A3942] z-10 `}>
+      <div className={`md:hidden fixed ${showChat && 'hidden'} bottom-0 left-0 right-0 h-16 bg-[#202C33] flex items-center justify-around border-t border-[#2A3942] z-10 `}>
+
+        <button
+          className="relative flex flex-col items-center justify-center cursor-pointer disabled:cursor-not-allowed"
+          onClick={back} disabled={!canGoBack}
+        >
+          <CircleChevronLeft
+            size={22}
+            className={`${!canGoBack ? 'opacity-50' : ""}`}
+          />
+        </button>
         {menu.map((item) => {
           const Icon = item.icon;
-          const isActive = active === item.id;
+          const isActive = current === item.id;
 
           return (
             <button
               key={item.id}
-              onClick={() => setActive(item.id)}
-              className="relative flex flex-col items-center justify-center"
+              onClick={() => {
+                push(item.id)
+              }}
+              className="relative flex flex-col items-center justify-center cursor-pointer"
             >
               <Icon
                 size={22}
@@ -98,6 +110,15 @@ export default function SidePanel() {
             </button>
           );
         })}
+        <button
+          className="relative flex flex-col items-center justify-center cursor-pointer disabled:opacity-50"
+          onClick={next} disabled={!canGoNext}
+        >
+          <CircleChevronRight
+            size={22}
+            className={`${!canGoNext ? 'opacity-50' : ""}`}
+          />
+        </button>
       </div>
     </>
   );

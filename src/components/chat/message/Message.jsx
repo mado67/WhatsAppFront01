@@ -173,16 +173,18 @@ const Message = function Message({ message, setSelectedReplyMessage }) {
             ) : message.type === "text" ? (
               <p className="self-start md:text-sm text-[14px] mr-auto">{message.body}</p>
             ) : message.type === "image" ? (
-              <img
-                src={
-                  message.pending
-                    ? message.file_path
-                    : `${import.meta.env.VITE_APP_URL}/storage/${message.file_path}`
-                  // : `${import.meta.env.VITE_APP_URL}/storage/${message.file_path}`
-                }
-                className="rounded-lg max-w-xs w-full"
-                loading="lazy"
-              />
+              <div className="max-w-xs w-full">
+                <img
+                  src={
+                    message.pending
+                      ? message.preview
+                      : `${import.meta.env.VITE_APP_URL}/storage/${message.file_path}`
+                    // : `${import.meta.env.VITE_APP_URL}/storage/${message.file_path}`
+                  }
+                  className="rounded-lg h-full w-full"
+                  loading="lazy"
+                />
+              </div>
             ) : null}
 
             {/* time + ticks */}

@@ -30,7 +30,7 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
   const { chats, setChats } = useChatList();
   const { setActiveChat, showChat } = useActiveChat();
   const { selectionChatMode, clearChatSelection, selectedChats } = useChatUI();
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [contacts, setContacts] = useState([])
 
   const [open, setOpen] = useState(false);
@@ -82,6 +82,7 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
 
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    setUser(null)
     window.location.href = "/";
   }, []);
 

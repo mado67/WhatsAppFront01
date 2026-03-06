@@ -163,6 +163,7 @@ export default function MessageInput({
     formData.append("chat_id", chatId);
     formData.append("type", "image");
     formData.append("file", file);
+    formData.append("preview", URL.createObjectURL(file));
     formData.append("is_delivered", isUserOnline(
       otherUser?.id
     )

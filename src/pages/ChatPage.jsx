@@ -4,12 +4,11 @@ import { ChatListProvider } from "../context/ChatListContext";
 import { ActiveChatProvider, useActiveChat } from "../context/ActiveChatContext";
 import { MessageProvider } from "../context/MessageContext";
 import { ChatUIProvider } from "../context/ChatUIContext";
-import MainChatPageSection from "../components/chat/MainChatPageSection";
-import MainSettingsSection from "../components/MainSettingsSection";
+
+import MainSecction from "../components/MainSecction";
 
 export default function ChatPage() {
 
- 
 
   return (
     <AuthProvider>
@@ -17,8 +16,7 @@ export default function ChatPage() {
         <ActiveChatProvider>
           <MessageProvider>
             <ChatUIProvider>
-            {true && <MainChatPageSection />}
-           {false && <MainSettingsSection />}
+              <MainSecction />
             </ChatUIProvider>
           </MessageProvider>
         </ActiveChatProvider>

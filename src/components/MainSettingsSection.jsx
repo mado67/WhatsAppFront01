@@ -9,8 +9,11 @@ import {
   LogOut,
   Settings as SettingsIcon,
 } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import Avatar from "./common/Avatar";
 
 export default function MainSettingsSection() {
+  const { user } = useAuth();
   const menu = [
     {
       title: "Account",
@@ -45,8 +48,7 @@ export default function MainSettingsSection() {
   ];
 
   return (
-    <div className="flex h-screen bg-[#0B141A] text-white">
-
+    <>
       {/* LEFT PANEL */}
       <div className="w-full md:w-[420px] border-r  border-b  border-[#222E35] flex flex-col">
 
@@ -69,13 +71,10 @@ export default function MainSettingsSection() {
         {/* Profile Card */}
         <div className="px-6 my-3">
           <div className="flex items-center gap-4 bg-[#202C33] p-4 rounded-xl hover:bg-[#2A3942] transition cursor-pointer">
-            <img
-              src="https://i.pravatar.cc/150"
-              className="w-14 h-14 rounded-full object-cover"
-            />
+            <Avatar src={user?.avatar} />
             <div>
-              <div className="font-medium">Mahmoud Galal</div>
-              <div className="text-sm text-gray-400">Dark Horse</div>
+              <div className="font-medium">{user.name}</div>
+              <div className="text-sm text-gray-400">{user.status || user.phone_number || " Dark Horse"}</div>
             </div>
           </div>
         </div>
@@ -118,6 +117,6 @@ export default function MainSettingsSection() {
           <div className="text-2xl">Settings</div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

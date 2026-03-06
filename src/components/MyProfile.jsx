@@ -1,23 +1,25 @@
 import { Phone, Copy, Pencil, ArrowLeft, Image, Loader2, Check } from "lucide-react";
 import { useState } from "react";
 import { updateProfile } from "../api/chatApi";
-import { set } from "date-fns";
+import { useAuth } from "../context/AuthContext";
 
 export default function MyProfile({ myProfile, setIsMyProfile }) {
     const [profileImage, setProfileImage] = useState(null);
     const [name, setName] = useState(myProfile?.name);
+    const [phone, setPhone] = useState(myProfile?.phone_number);
+    const [status, setStatus] = useState(myProfile?.status);
     const [avatar, setAvatar] = useState(myProfile?.avatar);
-    const [inputType, setInputType] = useState(false);
+    const [inputType, setinputType] = useState(null);
     const [loading, setLoading] = useState(false);
-
+    const { setUser } = useAuth()
 
 
     const handleUpdateprofile = async () => {
         try {
             setLoading(true);
-            const response = await updateProfile({ id: myProfile?.id, name, avatar });
+            const response = await updateProfile({ id: myProfile?.id, name, avatar, phone_number: phone, status });
+            setUser(response?.user)
             localStorage.setItem("user", JSON.stringify(response?.user));
-            console.log(response);
         }
         catch (err) {
             console.log(err);
@@ -74,23 +76,29 @@ export default function MyProfile({ myProfile, setIsMyProfile }) {
                         value={name || "—"}
                         action={<Pencil size={20} className="cursor-pointer" />}
                         inputType={inputType}
-                        onClick={() => setInputType(!inputType)}
+                        onClick={() => setinputType(inputType == "Name" ? null : "Name")}
                         onChange={(e) => setName(e.target.value)}
                     />
 
                     {/* About */}
                     <InfoRow
                         label="About"
-                        value={myProfile?.status || "Hey there! I am using WhatsApp."}
+                        value={status || "Hey there! I am using WhatsApp."}
+                        action={<Pencil size={20} className="cursor-pointer" />}
+                        inputType={inputType}
+                        onClick={() => setinputType(inputType == "About" ? null : "About")}
+                        onChange={(e) => setStatus(e.target.value)}
                     />
 
                     {/* Phone */}
                     <InfoRow
                         label="Phone"
-                        value={myProfile?.phone_number || "—"}
-                        icon={<Phone size={20} className="cursor-pointer" />}
-                        action={<Copy size={20} className="cursor-pointer" />}
-                        onClick={() => window.navigator.clipboard.writeText(myProfile?.phone_number)}
+                        value={phone || "—"}
+                        inputType={inputType}
+                        icon={<Copy size={20} className="cursor-pointer" onClick={() => window.navigator.clipboard.writeText(myProfile?.phone_number)} />}
+                        action={<Pencil size={20} className="cursor-pointer" />}
+                        onClick={() => setinputType(inputType == "Phone" ? null : "Phone")}
+                        onChange={(e) => setPhone(e.target.value)}
                     />
                 </div>
                 <button className="bg-[#00a884] p-3 rounded-full mt-auto w-fit justify-self-center items-self-center mx-auto mb-12 cursor-pointer" onClick={handleUpdateprofile}>
@@ -130,7 +138,7 @@ function InfoRow({ label, value, icon, action, onClick, inputType, onChange }) {
                         {icon && (
                             <div className="text-gray-400 mt-1 cursor-pointer" >{icon}</div>
                         )}
-                        {inputType ? <input className=" border-green-400 outline-none w-full border-b-2" type="text" value={value} onChange={onChange} /> : <p className="text-gray-200">{value}</p>}
+                        {inputType == label ? <input className=" border-green-400 outline-none w-full border-b-2" type="text" value={value} onChange={onChange} /> : <p className="text-gray-200">{value}</p>}
                     </div>
                 </div>
             </div>

@@ -8,7 +8,7 @@ import ChatPage from "./pages/ChatPage";
 function App() {
   const PrivateRoute = ({ children }) => {
     const token = localStorage.getItem("token");
-    return token ? children : <Navigate to="/signIn" />;
+    return token ? children : <Navigate to="/" />;
   };
 
   const PublicRoute = ({ children }) => {

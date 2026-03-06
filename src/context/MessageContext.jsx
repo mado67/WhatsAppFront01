@@ -239,6 +239,7 @@ export function MessageProvider({ children }) {
         reply_message: payload.get("reply_message"),
         file_path: payload.get("file_path"),
         file: payload.get("file"),
+        preview: payload.get("preview"),
         file_name: payload.get("file")?.name,
         file_size: payload.get("file")?.size,
         created_at: new Date().toISOString(),
@@ -253,7 +254,6 @@ export function MessageProvider({ children }) {
         pending: true,
         uploadProgress: 0,
       };
-
       setMessages((prev) => [...prev, optimisticMessage]);
       try {
         const response =
@@ -394,7 +394,6 @@ export function MessageProvider({ children }) {
       UserExistInChat,
       usersInChat,
       otherUser,
-
     ]
   );
 

@@ -1,5 +1,6 @@
 import { memo } from "react";
 import { formatWhatsAppDate } from "../../../utils/formatWhatsAppDate";
+import { Timer } from "lucide-react";
 
 const MessageMeta = memo(function MessageMeta({ message, isMine }) {
     return (
@@ -14,7 +15,7 @@ const MessageMeta = memo(function MessageMeta({ message, isMine }) {
 
             {isMine && (
                 <div className={message.is_seen ? "text-blue-500" : "text-white"}>
-                    {message.is_seen || message.is_delivered ? "✓✓" : "✓"}
+                    {message.pending ? <Timer size={20} /> : message.is_seen || message.is_delivered ? "✓✓" : "✓"}
                 </div>
             )}
         </div>

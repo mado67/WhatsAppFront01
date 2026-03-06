@@ -2,36 +2,49 @@ import { createContext, useContext, useState } from "react";
 
 const StackNavigationContext = createContext();
 
-export const StackNavigationProvider = ({ initialComponent, children }) => {
-  const [stack, setStack] = useState([initialComponent]);
+export const StackNavigationProvider = ({ children }) => {
+  const [history, setHistory] = useState(['ChatList']);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const push = (component) => {
-    setStack((prev) => [...prev, component]);
+    setHistory((prev) => {
+      const updated = prev.slice(0, currentIndex + 1);
+      updated.push(component);
+      return updated;
+    });
+    setCurrentIndex((prev) => prev + 1);
   };
 
-  const pop = () => {
-    setStack((prev) => {
-      if (prev.length === 1) return prev;
-      return prev.slice(0, -1);
-    });
+  const back = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex((prev) => prev - 1);
+    }
+  };
+
+  const next = () => {
+    if (currentIndex < history.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
+    }
   };
 
   const replace = (component) => {
-    setStack((prev) => {
-      const newStack = [...prev];
-      newStack[newStack.length - 1] = component;
-      return newStack;
+    setHistory((prev) => {
+      const updated = [...prev];
+      updated[currentIndex] = component;
+      return updated;
     });
   };
 
   return (
     <StackNavigationContext.Provider
       value={{
-        current: stack[stack.length - 1],
+        current: history[currentIndex],
         push,
-        pop,
+        back,
+        next,
         replace,
-        canGoBack: stack.length > 1,
+        canGoBack: currentIndex > 0,
+        canGoNext: currentIndex < history.length - 1,
       }}
     >
       {children}

@@ -1,15 +1,10 @@
-import { createContext, useContext, useMemo } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-    const user = useMemo(() => {
-        try {
-            return JSON.parse(localStorage.getItem("user"));
-        } catch {
-            return null;
-        }
-    }, []);
+    const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user")) || null)
+
 
     const token = useMemo(
         () => localStorage.getItem("token"),
@@ -17,7 +12,7 @@ export function AuthProvider({ children }) {
     );
 
     return (
-        <AuthContext.Provider value={{ user, token }}>
+        <AuthContext.Provider value={{ user, token, setUser }}>
             {children}
         </AuthContext.Provider>
     );
