@@ -40,7 +40,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#f0f2f5] to-[#e4e6eb] flex flex-col items-center justify-center p-8">
+    <div className="min-h-screen bg-gradient-to-b from-[#f0f2f5] to-[#e4e6eb] flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg overflow-hidden">
         <div className="bg-[#0F796D] p-8 text-center">
           <img className="w-[67px] h-[67px] mx-auto mb-2" src="logo.png" alt="" />
