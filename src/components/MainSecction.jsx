@@ -10,7 +10,7 @@ export default function MainSection() {
     const { current } = useStackNavigation();
     const [isMyProfile, setIsMyProfile] = useState(false);
     return (
-        <div className={`h-[100dvh] w-screen md:pl-20 ${showChat ? 'pb-0' : "pb-16"} md:pb-0 bg-[#0b141a] text-white flex overflow-hidden`}>
+        <div className={`h-[100dvh] w-screen md:pl-20 ${showChat ? 'pb-0' : "pb-16"} md:pb-0 bg-[var(--bg-secondary)] text-white flex overflow-hidden`}>
             <SidePanel isMyProfile={isMyProfile} setIsMyProfile={setIsMyProfile} />
             {current === 'ChatList' && <MainChatPageSection isMyProfile={isMyProfile} setIsMyProfile={setIsMyProfile} />}
             {current === 'Settings' && <MainSettingsSection />}

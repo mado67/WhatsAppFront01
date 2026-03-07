@@ -28,6 +28,19 @@ export default function ChatItem({ chat }) {
   const [showArrow, setShowArrow] = useState(false);
   const menuRef = useRef(null);
 
+  const [openUpward, setOpenUpward] = useState(false);
+
+  useEffect(() => {
+    if (!menuRef.current) return;
+
+    const rect = menuRef.current.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.top;
+
+    if (spaceBelow < 250) { // menu height approx
+      setOpenUpward(true);
+    }
+  }, []);
+
   /* ================= MEMOS ================= */
 
   const otherUser = useMemo(() => {
@@ -54,7 +67,11 @@ export default function ChatItem({ chat }) {
   }, [setSelectedChats]);
 
   const openChatHandler = useCallback(() => {
-    if (!chat) return;
+    if (selectionChatMode) {
+      toggleChatSelection(chat.id)
+      return;
+    }
+    if (!chat || activeChat?.id === chat.id) return;
 
     setActiveChat(chat);
     loadMessages(chat.id);
@@ -67,7 +84,7 @@ export default function ChatItem({ chat }) {
           : c
       )
     );
-  }, [chat, setActiveChat, loadMessages, setChats]);
+  }, [chat, setActiveChat, loadMessages, setChats, selectionChatMode, activeChat]);
 
   const toggleMenu = useCallback((e) => {
     e.stopPropagation();
@@ -100,58 +117,22 @@ export default function ChatItem({ chat }) {
       onMouseLeave={() => setShowArrow(false)}
       onKeyDown={(e) => e.key === "Enter" && openChatHandler()}
       className={`relative flex items-center gap-5 my-2 rounded-lg px-4 py-3 cursor-pointer transition-colors
-        hover:bg-[#111b21]
-        ${activeChat?.id === chat.id ? "bg-[#111b21]" : ""}
+        hover:bg-[var(--bg-secondary)] border-b-1 border-[var(--border-color)]
+        ${activeChat?.id === chat.id || isSelected ? "bg-[var(--bg-secondary)]" : ""}
       `}
     >
       {/* ✅ Selection checkbox */}
       {selectionChatMode && (
-        <label
-          onClick={(e) => e.stopPropagation()}
-          className="relative flex items-center cursor-pointer my-auto"
-        >
-          <input
-            type="checkbox"
-            checked={isSelected}
-            onChange={() => toggleChatSelection(chat.id)}
-            className="peer sr-only"
-          />
-
-          <div className="w-5 h-5 rounded-md border-2 border-lightgray flex items-center justify-center
-            peer-checked:bg-[#00a884] peer-checked:border-[#00a884] transition-all"
-          >
-            <svg
-              className={`w-3 h-3 text-black transition-opacity ${isSelected ? "opacity-100" : "opacity-0"
-                }`}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-          </div>
-        </label>
+        <div></div>
       )}
 
       {/* ✅ Dropdown */}
       {chatOption && (
         <div
           ref={menuRef}
-          className="absolute top-8 right-2 w-48 bg-[#233138] shadow-lg text-sm z-50 rounded-lg px-2 py-3 animate-in fade-in"
+          className={`absolute  ${openUpward ? "bottom-8" : "top-8"} right-2 w-48 bg-[var(--bg-secondary)] text-[var(--text-primary)] shadow-lg text-sm z-50 rounded-lg px-2 py-3 animate-in fade-in`}
         >
-          <MenuItem
-            text="Forward"
-            icon={<ForwardIcon width={16} height={16} />}
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleChatSelection(chat.id);
-              setSelectionChatMode("forward");
-              setChatOption(false);
-            }}
-          />
+
 
           <MenuItem
             text="Share Message"
@@ -181,13 +162,13 @@ export default function ChatItem({ chat }) {
       )}
 
       {/* ✅ Avatar */}
-      <Avatar src={otherUser?.avatar} />
+      <Avatar src={otherUser?.avatar} isSelected={isSelected} />
 
       {/* ✅ Hover Arrow */}
       {showArrow && !selectionChatMode && (
         <button
           onClick={toggleMenu}
-          className="absolute right-5 bottom-3 -translate-y-1/2 text-gray-400 hover:text-white"
+          className="absolute right-5 bottom-3 -translate-y-1/2 text-[var(--text-primary)] hover:text-[var(--text-secondary)]"
         >
           <ChevronDown size={16} />
         </button>
@@ -199,7 +180,7 @@ export default function ChatItem({ chat }) {
           <h4 className="text-sm font-medium truncate">
             {otherUser?.name || "Unknown"}
           </h4>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-[var(--text-primary)]">
             {chat.createdAt}
           </span>
         </div>
@@ -207,7 +188,7 @@ export default function ChatItem({ chat }) {
         <p
           className={`text-xs truncate mr-auto text-left mt-2 ${chat.unread_count > 0
             ? "text-green-500"
-            : "text-gray-400"
+            : "text-[var(--text-primary)]"
             }`}
         >
           {isTypingHere ? (
@@ -233,8 +214,8 @@ export default function ChatItem({ chat }) {
 function MenuItem({ text, danger, icon, onClick }) {
   return (
     <div
-      className={`px-2 py-2 cursor-pointer hover:bg-[#111b21] flex items-center gap-1 rounded-lg
-        ${danger ? "text-red-400 hover:bg-red-400/10" : "text-gray-200"}
+      className={`px-2 py-2 cursor-pointer bg-[var(--bg-secondary)] flex items-center gap-1 rounded-lg
+        ${danger ? "text-red-400 hover:bg-red-400/10" : "var(--text-primary) hover:bg-[var(--bg-primary)]"}
       `}
       onClick={onClick}
     >

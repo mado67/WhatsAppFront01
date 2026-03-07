@@ -4,12 +4,13 @@ import { updateProfile } from "../api/chatApi";
 import { useChatList } from "../context/ChatListContext";
 import { useActiveChat } from "../context/ActiveChatContext";
 import { useChatUI } from "../context/ChatUIContext";
+import { useAuth } from "../context/AuthContext";
 
 export default function ProfilePanel({ otherUser }) {
   const { activeChat, setActiveChat } = useActiveChat();
   const { openEditProfile, goBackPanel, profileOpen } = useChatUI();
   const { setChats } = useChatList();
-
+  const { user } = useAuth()
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     const formData = new FormData();
@@ -54,9 +55,9 @@ export default function ProfilePanel({ otherUser }) {
           <h2 className="text-lg font-medium">Contact info</h2>
         </div>
 
-        <button onClick={openEditProfile} className="hover:bg-[#2a3942] p-2 rounded-full cursor-pointer">
-          <Pencil size={18} />
-        </button>
+        {user.role == 'admin' && <button onClick={openEditProfile} className="hover:bg-[#2a3942] p-2 rounded-full cursor-pointer">
+          < Pencil size={18} />
+        </button>}
       </div>
 
       {/* Profile Content */}
@@ -69,7 +70,7 @@ export default function ProfilePanel({ otherUser }) {
         <h3 className="text-xl font-semibold">{otherUser?.name}</h3>
         <p className="text-gray-400 mt-1">{otherUser?.phone_number}</p>
         <input type="file" accept="image/*" className="hidden profile-avatar" onChange={handleImageChange} />
-        <Edit className="cursor-pointer absolute bottom-[45%] right-[37%]" onClick={() => document.querySelector("input[type='file'].profile-avatar").click()} />
+        {user.role == 'admin' && <Edit className="cursor-pointer absolute bottom-[45%] right-[37%]" onClick={() => document.querySelector("input[type='file'].profile-avatar").click()} />}
       </div>
 
       {/* Options */}
@@ -81,9 +82,9 @@ export default function ProfilePanel({ otherUser }) {
         <PanelItem text="Encryption" sub="Messages are end-to-end encrypted." icon={<Lock size={18} />} />
         <PanelItem text="Encryption" sub="Messages are end-to-end encrypted." icon={<Lock size={18} />} />
         <PanelItem text="Block contact" icon={<Lock size={18} className="text-red-400" />} danger />
-        <PanelItem text="Delete chat" icon={<Lock size={18} className="text-red-400" />} danger />
+        <PanelItem text="Delete contact" icon={<Lock size={18} className="text-red-400" />} danger />
       </div>
-    </div>
+    </div >
   );
 }
 

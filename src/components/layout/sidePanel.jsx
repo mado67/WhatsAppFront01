@@ -25,7 +25,7 @@ export default function SidePanel({ setIsMyProfile }) {
   return (
     <>
       {/* DESKTOP SidePanel */}
-      <div className='hidden  md:flex fixed left-0 top-0 h-screen w-20 bg-[#202C33] flex-col items-center border-r border-[#2A3942] py-4 justify-between'>
+      <div className='hidden  md:flex fixed left-0 top-0 h-screen w-20 bg-[var(--bg-secondary)]  flex-col items-center border-r border-[var(--border-color)] py-4 justify-between'>
 
         {/* Top Icons */}
         <div className="flex flex-col items-center gap-6">
@@ -39,11 +39,11 @@ export default function SidePanel({ setIsMyProfile }) {
                 onClick={() => {
                   push(item.id)
                 }}
-                className="relative flex items-center justify-center w-12 h-12 rounded-xl hover:bg-[#2A3942] transition cursor-pointer"
+                className={`${isActive ? 'bg-[var(--bg-primary)]' : ""} relative flex items-center justify-center w-12 h-12 rounded-xl hover:bg-[var(--bg-primary)]  transition cursor-pointer`}
               >
                 <Icon
                   size={22}
-                  className={isActive ? "text-white" : "text-gray-400"}
+                  className={isActive ? "text-[var(--text-secondary)]" : "text-[var(--text-primary)]"}
                 />
 
                 {/* Green dot */}
@@ -75,10 +75,10 @@ export default function SidePanel({ setIsMyProfile }) {
       </div>
 
       {/* MOBILE BOTTOM NAV */}
-      <div className={`md:hidden fixed ${showChat && 'hidden'} bottom-0 left-0 right-0 h-16 bg-[#202C33] flex items-center justify-around border-t border-[#2A3942] z-10 `}>
+      <div className={`md:hidden fixed ${showChat && 'hidden'} bottom-0 left-0 right-0 h-16 bg-[var(--bg-secondary)]  flex items-center justify-around border-t border-[#2A3942] z-10 `}>
 
         <button
-          className="relative flex flex-col items-center justify-center cursor-pointer disabled:cursor-not-allowed"
+          className="relative flex flex-col items-center justify-center cursor-pointer disabled:opacity-50"
           onClick={back} disabled={!canGoBack}
         >
           <CircleChevronLeft

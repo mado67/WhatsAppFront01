@@ -37,7 +37,7 @@ const Message = function Message({ message, setSelectedReplyMessage }) {
   // =============================
 
   const handleToggleSelect = useCallback(() => {
-    if (!selectionMode || selectionMode === "reply") return;
+    if (!selectionMode || selectionMode === "reply" || (selectionMode == 'delete' && message.user_id != user.id)) return;
     toggleMessageSelection(message.id);
   }, [selectionMode, message.id, toggleMessageSelection]);
 
@@ -87,7 +87,7 @@ const Message = function Message({ message, setSelectedReplyMessage }) {
 
   const containerClasses = `
     flex gap-4 flex-row-reverse
-    ${selectionMode && selectionMode !== "reply"
+    ${selectionMode && selectionMode !== "reply" && !(selectionMode == 'delete' && message.user_id != user.id)
       ? "p-2 cursor-pointer hover:bg-[#202c33]/40 rounded-md"
       : ""}
   `;
@@ -96,12 +96,13 @@ const Message = function Message({ message, setSelectedReplyMessage }) {
     max-w-[45%] w-fit break-all text-left rounded-lg text-sm relative
     flex items-end gap-2
     ${message.type === "image" ? "px-1 py-1" : "px-2 py-1"}
-    ${isMine ? "ml-auto bg-[#005c4b]" : "mr-auto bg-[#202c33]"}
+    ${isMine ? "ml-auto bg-[var(--bg-secondary1)]" : "mr-auto bg-[#202c33]"}
   `;
 
   // =============================
   // 🚀 RENDER
   // =============================
+  if (message.deleted_for?.includes(user.id)) return
 
   return (
     <div className={containerClasses} onClick={handleToggleSelect}>
@@ -128,7 +129,7 @@ const Message = function Message({ message, setSelectedReplyMessage }) {
         <div className="flex flex-col w-full">
           {/* reply preview */}
           {message.reply_to && message.reply_to != 'null' && (
-            <div className="bg-[#103E2C] w-full p-1 rounded-md border-l-3 border-green-400">
+            <div className="bg-[var(--bg-secondary1)] w-full p-1 rounded-md  border-l-3 border-green-400">
               <h3 className="text-sm text-green-400 mb-1">You</h3>
               <div className="text-sm text-gray-400 mb-1">
                 {message.type == 'text' && message.reply_message?.body ?
@@ -137,7 +138,7 @@ const Message = function Message({ message, setSelectedReplyMessage }) {
                     <img src={`${import.meta.env.VITE_APP_URL}/storage/${message.reply_message?.file_path}`} className=" w-15 h-[90%]" />
                   ) : (
                     <div className="flex-1 min-w-0 flex items-center gap-2">
-                      <div className="w-10 h-10 rounded-lg bg-[#2a3942] flex items-center justify-center shrink-0 md:block hidden">
+                      <div className="w-10 h-10 rounded-lg bg-[var(--bg-primary)] flex items-center justify-center shrink-0 md:block hidden">
                         <FileText size={20} className="text-gray-300 m-auto my-2" />
                       </div>
 
@@ -165,7 +166,7 @@ const Message = function Message({ message, setSelectedReplyMessage }) {
           )}
 
           {/* text / image */}
-          <div className="flex items-center sm:flex-row flex-col justify-end sm:gap-2 gap-1">
+          <div className={`flex items-center sm:flex-row ${message.reply_to ? 'flex-col' : "flex-row"} justify-end `}>
             {message.is_deleted ? (
               <p className="text-gray-400 italic md:text-sm text-[10px] ">
                 This message was deleted
@@ -192,6 +193,7 @@ const Message = function Message({ message, setSelectedReplyMessage }) {
           </div>
         </div>
 
+
         {/* hover arrow */}
         {showArrow && !selectionMode && (
           <button
@@ -204,13 +206,15 @@ const Message = function Message({ message, setSelectedReplyMessage }) {
       </div>
 
       {/* ========= checkbox ========= */}
-      {selectionMode && selectionMode !== "reply" && (
-        <SelectionCheckbox
-          checked={isSelected}
-          onChange={() => toggleMessageSelection(message.id)}
-        />
-      )}
-    </div>
+      {
+        selectionMode && selectionMode !== "reply" && !(selectionMode == 'delete' && message.user_id != user.id) && (
+          <SelectionCheckbox
+            checked={isSelected}
+            onChange={() => toggleMessageSelection(message.id)}
+          />
+        )
+      }
+    </div >
   );
 };
 

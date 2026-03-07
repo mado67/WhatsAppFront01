@@ -1,4 +1,4 @@
-import { Copy, Flag, Forward, Reply, Star, Trash2, X } from "lucide-react";
+import { Copy, Delete, Flag, Forward, Reply, Star, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import DeletePopup from "./DeletePopup";
 import { useChatUI } from "../../context/ChatUIContext";
@@ -13,7 +13,12 @@ export default function SelectionBar({ handleClick }) {
       case 'delete':
         setConfirmDelete(true);
         break;
+      case 'reply':
+        break;
       case 'copy':
+        handleClick();
+        break;
+      case 'deleteForMe':
         handleClick();
         break;
     }
@@ -33,9 +38,8 @@ export default function SelectionBar({ handleClick }) {
       >
         {selectionMode === 'delete' && <Trash2 size={25} color="red" />}
         {selectionMode === 'copy' && <Copy size={25} color="blue" />}
+        {selectionMode === 'deleteForMe' && <Delete size={25} color="red" />}
         {selectionMode === 'forward' && selectedMessages.length !== 0 && <Forward size={25} color="green" />}
-        {selectionMode === 'star' && <Star size={25} color="yellow" />}
-        {selectionMode === 'report' && <Flag size={25} color="orange" />}
         {selectionMode === 'reply' && <Reply size={25} color="purple" />}
       </button>
 

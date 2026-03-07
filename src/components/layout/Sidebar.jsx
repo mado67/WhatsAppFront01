@@ -1,6 +1,5 @@
 import {
   BellOffIcon,
-  Forward,
   LogOutIcon,
   SearchIcon,
   Send,
@@ -8,6 +7,8 @@ import {
   X,
   MessageSquareTextIcon,
   UserIcon,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 import ChatList from "../chat/ChatList";
@@ -25,12 +26,14 @@ import { useAuth } from "../../context/AuthContext";
 import { useChatUI } from "../../context/ChatUIContext";
 import echo from "../../lib/bootstrap";
 import NewContactModal from "../NewContactModal";
+import useTheme from "../../hooks/useTheme";
 
 export default function Sidebar({ setIsMyProfile, isMyProfile }) {
   const { chats, setChats } = useChatList();
   const { setActiveChat, showChat } = useActiveChat();
   const { selectionChatMode, clearChatSelection, selectedChats } = useChatUI();
   const { user, setUser } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [contacts, setContacts] = useState([])
 
   const [open, setOpen] = useState(false);
@@ -40,6 +43,8 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
   const [chatOption, setChatOption] = useState("");
   const [opennewContactModal, setopennewContactModal] = useState(false);
   const menuRef = useRef(null);
+
+  console.log(theme)
 
   /* ================= MEMO FILTER ================= */
 
@@ -146,7 +151,7 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
   return (
     <aside
       className={`
-        bg-[#202c33] border-r border-[#2a3942]
+        bg-[var(--bg-primary)] text-[var(--text-primary)] border-r border-[var(--border-color)]
         flex flex-col
         w-full md:w-[420px]
         h-full
@@ -161,7 +166,7 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
       )}
 
       {/* Header */}
-      <div className="h-14 px-4 flex items-center justify-between">
+      <div className="h-14 px-4 flex items-center justify-between ">
         <div
           className="flex items-center gap-8 cursor-pointer"
           onClick={() => setIsMyProfile(true)}
@@ -179,7 +184,7 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
           </span>
 
           {open && (
-            <div className="absolute right-0 top-10 w-48 bg-[#233138] shadow-lg rounded-md text-sm z-50 rounded-b-lg px-2 py-4">
+            <div className="absolute right-0 top-10 w-48 bg-[var(--bg-secondary)] text-[var(--text-primary)] shadow-lg rounded-md text-sm z-50 rounded-b-lg px-2 py-4">
               <MenuItem text="New Chat" icon={<MessageSquareTextIcon size={16} />} onClick={handleNewChat} />
               <MenuItem text="New Contact" icon={<UserIcon size={16} />} onClick={() => {
                 setOpen(false);
@@ -187,7 +192,10 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
               }}
               />
               <MenuItem text="Mute Chats" icon={<BellOffIcon size={16} />} />
-              <MenuItem text="Clear Chats" danger icon={<MessageSquareTextIcon size={16} />} />
+              {<MenuItem text={theme === 'dark' ? 'Light mode' : 'Dark mode'} icon={theme === "dark" ? <Sun size={16} /> : <Moon size={16} />} onClick={() => {
+                toggleTheme()
+                setOpen(false)
+              }} />}
               <MenuItem text="Logout" danger icon={<LogOutIcon size={16} />} onClick={handleLogout} />
             </div>
           )}
@@ -196,9 +204,9 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
 
       {/* Search */}
       <div className="p-2 relative">
-        <SearchIcon className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+        <SearchIcon className="w-4 h-4 text-[var(--text-primary)] absolute left-4 top-1/2 -translate-y-1/2" />
         <input
-          className="w-full pl-8 placeholder:text-gray-400 bg-[#111b21] px-4 py-2 rounded-2xl text-sm outline-none"
+          className="w-full pl-8 placeholder:text-[var(--text-primary)] bg-[var(--bg-secondary)] px-4 py-2 rounded-2xl text-sm outline-none"
           placeholder="Search or start a new chat"
           value={searchQuery}
           onChange={handleSearch}
@@ -209,7 +217,7 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
 
       {/* Selection bar */}
       {selectionChatMode && (
-        <div className="h-14 bg-[#202c33] flex items-center justify-between px-4 border-t border-[#2a3942] absolute bottom-0 left-0 right-0">
+        <div className="h-14 bg-[var(--bg-secondary)] text-[var(--text-primary)] flex items-center justify-between px-4 border-t border-[#2a3942] absolute top-0 left-0 right-0">
           <div className="flex items-center gap-4">
             <button onClick={clearChatSelection} className="cursor-pointer">
               <X />
@@ -223,7 +231,6 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
           >
             {selectionChatMode === "deleteChats" && <Trash2 color="red" size={25} />}
             {selectionChatMode === "sendMessages" && <Send color="green" size={25} />}
-            {selectionChatMode === "forward" && <Forward color="blue" size={25} />}
           </button>
         </div>
       )}
@@ -253,7 +260,7 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
 function MenuItem({ text, danger, icon, onClick }) {
   return (
     <div
-      className={`px-2 py-2 cursor-pointer hover:bg-[#111b21] flex items-center gap-1 rounded-lg ${danger ? "text-red-400" : "text-gray-200"
+      className={`px-2 py-2 cursor-pointer hover:bg-[var(--bg-primary)]  flex items-center gap-1 rounded-lg ${danger ? "text-red-400" : "var(--text-primary)"
         }`}
       onClick={onClick}
     >

@@ -8,6 +8,8 @@ import ForwardMessages from "./ForwardMessages";
 import { useChatUI } from "../../context/ChatUIContext";
 import { useActiveChat } from "../../context/ActiveChatContext";
 import { useMessages } from "../../context/MessageContext";
+import { useAuth } from "../../context/AuthContext";
+import useTheme from "../../hooks/useTheme";
 
 export default function MessageInput({
   chatId,
@@ -20,10 +22,10 @@ export default function MessageInput({
   const typingTimeoutRef = useRef(null);
   const fileRef = useRef(null);
   const imageRef = useRef(null);
-
+  const { user } = useAuth()
+  const { theme } = useTheme()
   const { selectionMode, profileOpen, selectedMessages, clearSelection, setSelectedMessages, setSelectionMode } =
     useChatUI();
-
   const { activeChat } = useActiveChat();
   const { handleSendMessage, sendTyping, setMessages, messages, otherUser, UserExistInChat, isUserOnline } =
     useMessages();
@@ -51,6 +53,20 @@ export default function MessageInput({
       prev.map((message) =>
         selectedMessages.includes(message.id)
           ? { ...message, is_deleted: true }
+          : message
+      )
+    );
+
+    clearSelection();
+  }, [chatId, selectedMessages, setMessages, clearSelection]);
+
+  const handleDeleteForMe = useCallback(() => {
+    deleteMessages(chatId, selectedMessages, 'me');
+
+    setMessages((prev) =>
+      prev.map((message) =>
+        selectedMessages.includes(message.id)
+          ? { ...message, deleted_for: [...message.deleted_for, user.id] }
           : message
       )
     );
@@ -95,11 +111,8 @@ export default function MessageInput({
     case "forward":
       actionComponent = <ForwardMessages />;
       break;
-    case "star":
-      actionComponent = <SelectionBar handleClick={() => { }} />;
-      break;
-    case "report":
-      actionComponent = <SelectionBar handleClick={() => { }} />;
+    case "deleteForMe":
+      actionComponent = <SelectionBar handleClick={handleDeleteForMe} />;
       break;
   }
 
@@ -213,18 +226,18 @@ export default function MessageInput({
   // =============================
   return (
     <div
-      className={`bg-[#202c33] p-3 relative ${profileOpen ? "w-[66.66%]" : "w-full p-2"
+      className={`bg-[var(--bg-primary)] p-3 relative ${profileOpen ? "w-[66.66%]" : "w-full p-2"
         }`}
     >
       <form
         onSubmit={submitText}
-        className="flex bg-[#111b21] items-center gap-2 rounded-2xl relative pl-12 md:w-full  m-auto"
+        className="flex bg-[var(--bg-secondary)] items-center gap-2 rounded-2xl relative pl-12 md:w-full  m-auto"
       >
         {/* file */}
         <button
           type="button"
           onClick={() => fileRef.current?.click()}
-          className="text-gray-400 absolute left-4 top-1/2 -translate-y-1/2 hover:bg-[#202C33] hover:p-1 rounded-lg cursor-pointer"
+          className="text-gray-400 absolute left-4 top-1/2 -translate-y-1/2 hover:bg-[var(--bg-primary)] hover:p-1 rounded-lg cursor-pointer"
         >
           <Paperclip size={22} />
         </button>
@@ -240,7 +253,7 @@ export default function MessageInput({
         <button
           type="button"
           onClick={() => imageRef.current?.click()}
-          className="text-gray-400 absolute left-18 top-1/2 -translate-y-1/2 hover:bg-[#202C33] hover:p-1 rounded-lg cursor-pointer"
+          className="text-gray-400 absolute left-22 top-1/2 -translate-y-1/2 hover:bg-[var(--bg-primary)] hover:p-1 rounded-lg cursor-pointer"
         >
           <ImageIcon size={22} />
         </button>
@@ -258,14 +271,14 @@ export default function MessageInput({
           <button
             type="button"
             onClick={() => setShowEmoji((p) => !p)}
-            className="text-gray-400 absolute left-11 top-1/2 -translate-y-1/2 hover:bg-[#202C33] hover:p-1 rounded-lg cursor-pointer"
+            className="text-gray-400 absolute left-13 top-1/2 -translate-y-1/2 hover:bg-[var(--bg-primary)] hover:p-1 rounded-lg cursor-pointer"
           >
             <Smile size={22} />
           </button>
 
           {showEmoji && (
             <div className="absolute bottom-12 left-0 z-[999]">
-              <EmojiPicker onEmojiClick={onEmojiClick} theme="dark" />
+              <EmojiPicker onEmojiClick={onEmojiClick} theme={theme} />
             </div>
           )}
         </div>
@@ -277,7 +290,7 @@ export default function MessageInput({
             setText(e.target.value);
             handleTyping();
           }}
-          className="flex-1 px-16 py-2 outline-none text-sm bg-transparent"
+          className="flex-1 px-18 py-2 outline-none text-sm bg-transparent"
           placeholder="Type a message"
         />
 

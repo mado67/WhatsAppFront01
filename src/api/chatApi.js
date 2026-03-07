@@ -50,6 +50,10 @@ export const addMultiChat = async (payload) => {
     return data;
 };
 
+export const clearChatApi = async (chatId) => {
+    const { data } = await axiosInstance.post(`/chats/${chatId}/clear`);
+};
+
 export const deleteChats = async (ids) => {
     const { data } = await axiosInstance.post(`/chats/delete`, { chat_ids: ids });
 };

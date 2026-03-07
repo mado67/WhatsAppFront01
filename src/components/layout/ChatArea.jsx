@@ -4,7 +4,6 @@ import Avatar from "../common/Avatar";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeftIcon,
-  BoxSelectIcon,
   MessageSquareTextIcon,
   TrashIcon,
   UserIcon,
@@ -17,13 +16,14 @@ import { useActiveChat } from "../../context/ActiveChatContext";
 import { useAuth } from "../../context/AuthContext";
 import { useMessages } from "../../context/MessageContext";
 import { useChatUI } from "../../context/ChatUIContext";
+import { clearChatApi, deleteChats } from "../../api/chatApi";
 
 export default function ChatArea() {
-  const { setConversations } = useChatList();
+  const { setChats } = useChatList();
   const { activeChat, setActiveChat, showChat, setShowChat } = useActiveChat();
   const { user } = useAuth();
   const { profileOpen, openProfile } = useChatUI();
-  const { loadingMessages, onlineUsers } = useMessages();
+  const { loadingMessages, onlineUsers, setMessages } = useMessages();
 
   const closeChat = () => {
     setShowChat(false);
@@ -64,12 +64,15 @@ export default function ChatArea() {
     );
   }
 
-
-
+  const clearChat = async () => {
+    setOpen(false);
+    setMessages([])
+    clearChatApi(activeChat.id)
+  }
 
   const deleteChat = () => {
-    // deleteConversations(activeChat.id);
-    setConversations((prev) => prev.filter((conv) => conv.id != activeChat.id));
+    deleteChats([activeChat.id]);
+    setChats((prev) => prev.filter((c) => c.id !== activeChat.id));
     setActiveChat(null);
     setOpen(false);
   };
@@ -77,7 +80,7 @@ export default function ChatArea() {
   if (loadingMessages) {
     return (
       <main
-        className={` flex-1 flex scrollbar-hover flex-col bg-[#0b141a] relative`}
+        className={` flex-1 flex scrollbar-hover flex-col bg-[var(--bg-secondary)] relative`}
       >
         <ChatHeaderSkeleton />
         <MessagesSkeleton />
@@ -87,14 +90,13 @@ export default function ChatArea() {
 
 
 
-
   return (
     <main
-      className={` flex-1 flex scrollbar-hover flex-col bg-[#0b141a] max-w-[100vw] relative ${showChat ? "translate-x-0" : "translate-x-full md:translate-x-0"} transform transition-transform duration-300 ease-in-out`}
+      className={` flex-1 flex scrollbar-hover flex-col bg-[var(--bg-secondary)] text-[var(--text-primary)] max-w-[100vw] relative ${showChat ? "translate-x-0" : "translate-x-full md:translate-x-0"} transform transition-transform duration-300 ease-in-out`}
     >
       {/* Header */}
       <div
-        className={`h-14 px-4 flex items-center justify-between border-b border-[#2a3942] bg-[#202c33] relative transition duration-300 ease-in-out ${profileOpen ? "w-[66.66%]" : "w-full"}`}
+        className={`h-14 px-4 flex items-center justify-between border-b border-[var--(border-color)] bg-[var(--bg-secondary1)] relative transition duration-300 ease-in-out ${profileOpen ? "w-[66.66%]" : "w-full"}`}
       >
         <div className="flex items-center gap-2">
           {/* Back arrow (mobile only) */}
@@ -102,7 +104,7 @@ export default function ChatArea() {
             <ArrowLeftIcon
               width={40}
               height={40}
-              className="text-gray-400 cursor-pointer hover:text-white hover:bg-[#2a3942] p-2 rounded-full"
+              className="text-gray-400 cursor-pointer hover:text-[var(--text-primary)] hover:bg-[var(--text-secondary)] p-2 rounded-full"
             />
           </button>
           <Avatar src={activeChat?.users.find((u) => u.id !== user.id).avatar} onClick={
@@ -127,14 +129,14 @@ export default function ChatArea() {
 
           {/* Dropdown */}
           {open && (
-            <div className="absolute right-0 top-10 w-48 bg-[#233138] shadow-lg rounded-md  text-sm z-50 rounded-b-lg px-2 py-4">
+            <div className="absolute right-0 top-10 w-48 bg-[var(--bg-primary)] text-[var(--text-primary)] shadow-lg rounded-md  text-sm z-50 rounded-b-lg px-2 py-4 z-10">
               <MenuItem
                 text="Contact info"
+                onClick={() => {
+                  setOpen(false);
+                  openProfile();
+                }}
                 icon={<UserIcon width={16} height={16} />}
-              />
-              <MenuItem
-                text="Select messages"
-                icon={<BoxSelectIcon width={16} height={16} />}
               />
               <MenuItem
                 text="Mute notifications"
@@ -143,14 +145,16 @@ export default function ChatArea() {
               <MenuItem
                 text="Clear messages"
                 danger
+                onClick={clearChat}
                 icon={<MessageSquareTextIcon width={16} height={16} />}
               />
-              <MenuItem
-                text="Delete chat"
-                danger
-                icon={<TrashIcon width={16} height={16} />}
-                onClick={deleteChat}
-              />
+              {user.role == 'admin' &&
+                <MenuItem
+                  text="Delete chat"
+                  danger
+                  icon={<TrashIcon width={16} height={16} />}
+                  onClick={deleteChat}
+                />}
             </div>
           )}
         </div>
@@ -168,8 +172,8 @@ function MenuItem({ text, danger, icon, onClick }) {
   return (
     <div
       onClick={onClick}
-      className={` px-2 py-2 cursor-pointer hover:bg-[#111b21] flex items-center gap-1 rounded-lg
-      ${danger ? "text-red-400" : "text-gray-200"}`}
+      className={` px-2 py-2 cursor-pointer hover:bg-[var(--bg-secondary)] flex items-center gap-1 rounded-lg 
+      ${danger ? "text-red-400" : "var(--text-primary)]"}`}
     >
       {icon && <span className="mr-2">{icon}</span>}
       {text}

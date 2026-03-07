@@ -1,12 +1,11 @@
 import {
     CopyIcon,
-    FlagIcon,
     ForwardIcon,
     MessageSquareTextIcon,
-    StarIcon,
     TrashIcon,
+    Delete
 } from "lucide-react";
-import { memo } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 const DropdownMenu = memo(function DropdownMenu({
     isMine,
@@ -22,10 +21,26 @@ const DropdownMenu = memo(function DropdownMenu({
         toggleMessageSelection(message.id);
     };
 
+
+    const menuRef = useRef(null);
+    const [openUpward, setOpenUpward] = useState(false);
+
+    useEffect(() => {
+        if (!menuRef.current) return;
+
+        const rect = menuRef.current.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.top;
+
+        if (spaceBelow < 250) { // menu height approx
+            setOpenUpward(true);
+        }
+    }, []);
+
     return (
         <div
-            className={`absolute top-6 ${isMine ? "right-[70%]" : "left-[70%]"
-                } w-48 bg-[#233138] shadow-lg rounded-md text-sm z-50 px-2 py-4`}
+            ref={menuRef}
+            className={`absolute transition-all duration-150 scale-95   animate-dropdown ${openUpward ? "bottom-6" : "top-6"} ${isMine ? "right-[70%]" : "left-[70%]"
+                } w-48 bg-[var(--bg-primary)] shadow-lg rounded-md text-sm z-50 px-2 py-4`}
         >
             <MenuItem
                 text="Reply"
@@ -50,20 +65,15 @@ const DropdownMenu = memo(function DropdownMenu({
                 onClick={() => handleAction("forward")}
             />
 
-            <MenuItem
-                text="Star"
-                icon={<StarIcon size={16} />}
-                onClick={() => handleAction("star")}
-            />
+
 
             <div className="w-full h-[1px] bg-gray-600 my-2" />
 
             <MenuItem
-                text="Report"
-                icon={<FlagIcon size={16} />}
-                onClick={() => handleAction("report")}
+                text="Delete for me"
+                icon={<Delete size={16} />}
+                onClick={() => handleAction("deleteForMe")}
             />
-
             <MenuItem
                 text="Delete Message"
                 danger
@@ -79,7 +89,7 @@ const MenuItem = memo(function MenuItem({ text, icon, onClick, danger }) {
     return (
         <button
             onClick={onClick}
-            className={`flex items-center gap-2 w-full py-2 px-3 hover:bg-gray-700 cursor-pointer ${danger ? "text-red-500" : ""
+            className={`flex items-center gap-2 w-full py-2 px-3 hover:bg-[var(--bg-secondary)] cursor-pointer ${danger ? "text-red-500" : "[var(--text-primary)]"
                 }`}
         >
             {icon}
