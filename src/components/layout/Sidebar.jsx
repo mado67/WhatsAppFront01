@@ -26,7 +26,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useChatUI } from "../../context/ChatUIContext";
 import echo from "../../lib/bootstrap";
 import NewContactModal from "../NewContactModal";
-import useTheme from "../../hooks/useTheme";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function Sidebar({ setIsMyProfile, isMyProfile }) {
   const { chats, setChats } = useChatList();
@@ -34,7 +34,7 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
   const { selectionChatMode, clearChatSelection, selectedChats } = useChatUI();
   const { user, setUser } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const [contacts, setContacts] = useState([])
+  const [contacts, setContacts] = useState([]);
 
   const [open, setOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -44,7 +44,6 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
   const [opennewContactModal, setopennewContactModal] = useState(false);
   const menuRef = useRef(null);
 
-  console.log(theme)
 
   /* ================= MEMO FILTER ================= */
 
@@ -216,24 +215,22 @@ export default function Sidebar({ setIsMyProfile, isMyProfile }) {
       <ChatList filteredChats={filteredChats} />
 
       {/* Selection bar */}
-      {selectionChatMode && (
-        <div className="h-14 bg-[var(--bg-secondary)] text-[var(--text-primary)] flex items-center justify-between px-4 border-t border-[#2a3942] absolute top-0 left-0 right-0">
-          <div className="flex items-center gap-4">
-            <button onClick={clearChatSelection} className="cursor-pointer">
-              <X />
-            </button>
-            <span>{selectedChats.length} selected</span>
-          </div>
-
-          <button
-            onClick={handleChatOption}
-            className="transition cursor-pointer hover:-translate-y-1 hover:scale-110"
-          >
-            {selectionChatMode === "deleteChats" && <Trash2 color="red" size={25} />}
-            {selectionChatMode === "sendMessages" && <Send color="green" size={25} />}
+      <div className={`h-14 bg-[var(--bg-secondary)] text-[var(--text-primary)] flex items-center justify-between px-4 border-t border-[#2a3942] absolute top-0 left-0 right-0 transform transition-transform duration-300 ease-in-out ${selectionChatMode ? "translate-y-0" : "-translate-y-full"}`}>
+        <div className="flex items-center gap-4">
+          <button onClick={clearChatSelection} className="cursor-pointer">
+            <X />
           </button>
+          <span>{selectedChats.length} selected</span>
         </div>
-      )}
+
+        <button
+          onClick={handleChatOption}
+          className="transition cursor-pointer hover:-translate-y-1 hover:scale-110"
+        >
+          {selectionChatMode === "deleteChats" && <Trash2 color="red" size={25} />}
+          {selectionChatMode === "sendMessages" && <Send color="green" size={25} />}
+        </button>
+      </div>
 
       {chatOption && (
         <ChatOptions

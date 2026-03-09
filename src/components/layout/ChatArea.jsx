@@ -58,7 +58,7 @@ export default function ChatArea() {
 
   if (!activeChat) {
     return (
-      <main className="flex-1 flex items-center justify-center text-gray-400">
+      <main className="flex-1 flex items-center justify-center text-[var(--text-primary)]">
         Select a chat
       </main>
     );
@@ -92,7 +92,7 @@ export default function ChatArea() {
 
   return (
     <main
-      className={` flex-1 flex scrollbar-hover flex-col bg-[var(--bg-secondary)] text-[var(--text-primary)] max-w-[100vw] relative ${showChat ? "translate-x-0" : "translate-x-full md:translate-x-0"} transform transition-transform duration-300 ease-in-out`}
+      className={` flex-1  h-full flex scrollbar-hover flex-col bg-[var(--bg-secondary)] text-[var(--text-primary)] max-w-[100vw] relative ${showChat ? "translate-x-0" : "translate-x-full md:translate-x-0"} transform transition-transform duration-300 ease-in-out`}
     >
       {/* Header */}
       <div
@@ -104,7 +104,7 @@ export default function ChatArea() {
             <ArrowLeftIcon
               width={40}
               height={40}
-              className="text-gray-400 cursor-pointer hover:text-[var(--text-primary)] hover:bg-[var(--text-secondary)] p-2 rounded-full"
+              className="text-gray-400 cursor-pointer hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] p-2 rounded-full"
             />
           </button>
           <Avatar src={activeChat?.users.find((u) => u.id !== user.id).avatar} onClick={
@@ -113,8 +113,8 @@ export default function ChatArea() {
             }
           } />
           <div>
-            <h3 className="text-sm font-medium">{activeChat?.users.find((u) => u.id !== user.id).name}</h3>
-            <p className="text-xs text-gray-400">{userIsOnline ? <div className="flex items-center items-center flex-row-reverse gap-2"><div className="w-2 h-2 rounded-full bg-green-500"></div>Online</div> : "Offline"}</p>
+            <h3 className="text-md text-[var(--text-primary)] font-medium">{activeChat?.users.find((u) => u.id !== user.id).name}</h3>
+            <p className="text-[10px] font-bold text-[var(--text-primary)]">{userIsOnline ? <div className="flex items-center items-center flex-row-reverse gap-2"><div className="w-2 h-2 rounded-full bg-green-500"></div>Online</div> : "Offline"}</p>
           </div>
         </div>
 

@@ -54,7 +54,7 @@ export default function ChatItem({ chat }) {
   );
 
   const isTypingHere =
-    typingUser?.user_id === otherUser.id;
+    typingUser?.user_id === otherUser?.id;
 
   /* ================= HANDLERS ================= */
 

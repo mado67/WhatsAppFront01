@@ -13,6 +13,12 @@
 <body>
   <div id="root" class="app-bg"></div>
   <script type="module" src="/src/main.jsx"></script>
+  <script>
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    }
+  </script>
 </body>
 
 </html>

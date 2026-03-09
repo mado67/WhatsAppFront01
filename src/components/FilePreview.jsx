@@ -27,15 +27,15 @@ function FilePreview({ message, url }) {
                 <div className="max-w-[340px] text-white">
                     {
                         !message.is_deleted && (
-                            <div className="bg-[#202c33] rounded-2xl p-3 flex items-center md:gap-8 gap-2 shadow-md sm:flex-row flex-col">
+                            <div className="bg-[var(--bg-primary)] text-[var(--text-primary)]  rounded-2xl p-3 flex items-center md:gap-8 gap-2 shadow-md sm:flex-row flex-col">
                                 {/* File Info */}
                                 <div className="flex-1 min-w-0 flex items-center gap-2">
-                                    <div className="w-10 h-10 rounded-lg bg-[#2a3942] flex items-center justify-center shrink-0 md:block hidden">
+                                    <div className="w-10 h-10 rounded-lg bg-[var(--bg-secondary)]  flex items-center justify-center shrink-0 md:block hidden">
                                         <FileText size={20} className="text-gray-300 m-auto my-2" />
                                     </div>
 
                                     <div className="min-w-0">
-                                        <p className="text-xs text-gray-400">{message?.file_name?.split(".")[1]} • {(message?.file_size / 1024 / 1024).toFixed(2)} MB</p>
+                                        <p className="text-xs text-[var(--text-secondary)]">{message?.file_name?.split(".")[1]} • {(message?.file_size / 1024 / 1024).toFixed(2)} MB</p>
                                         <p className="text-sm font-medium truncate md:text-sm text-[8px] ">{message?.file_name}</p>
                                     </div>
                                 </div>
@@ -55,7 +55,7 @@ function FilePreview({ message, url }) {
                                             cx="20"
                                             cy="20"
                                             r={radius}
-                                            stroke="#3b4a54"
+                                            stroke="bg-[var(--bg-secondary)]"
                                             strokeWidth="2.5"
                                             fill="transparent"
                                         />
@@ -87,7 +87,7 @@ function FilePreview({ message, url }) {
                                             link.click();
                                             link.remove();
                                         }}
-                                        className="w-8 h-8 rounded-full flex items-center justify-center bg-[#202c33] hover:bg-[#2a3942] transition cursor-pointer relative z-10">
+                                        className="w-8 h-8 rounded-full flex items-center justify-center bg-[var(--bg-secondary)]  hover:bg-[var(--bg-primary)]  transition cursor-pointer relative z-10">
                                         <Download size={16} />
                                     </div>
                                 </button>

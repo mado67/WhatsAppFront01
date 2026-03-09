@@ -75,7 +75,7 @@ export default function SidePanel({ setIsMyProfile }) {
       </div>
 
       {/* MOBILE BOTTOM NAV */}
-      <div className={`md:hidden fixed ${showChat && 'hidden'} bottom-0 left-0 right-0 h-16 bg-[var(--bg-secondary)]  flex items-center justify-around border-t border-[#2A3942] z-10 `}>
+      <div className={`md:hidden fixed ${showChat && 'hidden'} bottom-0 left-0 right-0 h-16 bg-[var(--bg-secondary)] text-[var(--text-primary)]  flex items-center justify-around border-t border-[#2A3942] z-10 `}>
 
         <button
           className="relative flex flex-col items-center justify-center cursor-pointer disabled:opacity-50"

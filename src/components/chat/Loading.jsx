@@ -2,8 +2,8 @@ export function ChatListSkeleton() {
     return (
         <div className="p-3 space-y-4">
             {[...Array(8)].map((_, i) => (
-                <div key={i} className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full shimmer" />
+                <div key={i} className="flex items-center gap-3 bg-[var(--bg-primary)]">
+                    <div className="w-12 h-12 rounded-full shimmer bg-[var(--bg-primary)]" />
                     <div className="flex-1 space-y-2">
                         <div className="h-3 w-1/2 rounded shimmer" />
                         <div className="h-3 w-1/3 rounded shimmer" />
@@ -16,7 +16,7 @@ export function ChatListSkeleton() {
 
 export function ChatHeaderSkeleton() {
     return (
-        <div className="h-14  px-4 flex items-center gap-3 border-b border-[#2a3942] bg-[#202c33]">
+        <div className="h-14  px-4 flex items-center gap-3 border-b border-[#2a3942] bg-[var(--bg-primary)]">
             <div className="w-14 h-10 rounded-full shimmer" />
             <div className="flex-1 space-y-2">
                 <div className="h-5 w-36 rounded shimmer" />
@@ -47,7 +47,7 @@ export function MessagesSkeleton() {
 
 export function InputSkeleton() {
     return (
-        <div className="absolute bottom-0 w-full h-16 px-4 flex items-center gap-3 border-t border-[#2a3942] bg-[#202c33]">
+        <div className="absolute bottom-0 w-full h-16 px-4 flex items-center gap-3 border-t border-[#2a3942] bg-[var(--bg-primary)]">
             <div className="w-10 h-10 rounded-full shimmer" />
         </div>
     );

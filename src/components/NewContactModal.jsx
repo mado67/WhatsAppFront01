@@ -75,7 +75,7 @@ export default function NewContactModal({ open, onClose, setContacts }) {
                 <>
                     {/* overlay */}
                     <div
-                        className="fixed inset-0 bg-black/40 z-40"
+                        className="fixed inset-0 bg-[var(--bg-secondary)]/40 z-40"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -84,7 +84,7 @@ export default function NewContactModal({ open, onClose, setContacts }) {
 
                     {/* modal */}
                     <div
-                        className="fixed left-1/2 top-1/2 z-50 w-[380px] max-w-[95vw] -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-[#202C33] p-6 shadow-xl"
+                        className="fixed left-1/2 top-1/2 z-50 w-[380px] max-w-[95vw] -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-[var(--bg-secondary)]  p-6 shadow-xl"
                         initial={{ y: 80, opacity: 0, scale: 0.95 }}
                         animate={{ y: 0, opacity: 1, scale: 1 }}
                         exit={{ y: 80, opacity: 0, scale: 0.95 }}
@@ -128,7 +128,7 @@ export default function NewContactModal({ open, onClose, setContacts }) {
                         <label className="text-sm font-semibold">Contact Image</label>
 
                         <div className="flex justify-center my-4">
-                            <div className="h-24 w-24 overflow-hidden rounded-full bg-[#131A1F] flex items-center justify-center ">
+                            <div className="h-24 w-24 overflow-hidden rounded-full bg-[var(--bg-primary)] flex items-center justify-center ">
                                 {preview ? (
                                     <img
                                         src={preview}
@@ -143,7 +143,7 @@ export default function NewContactModal({ open, onClose, setContacts }) {
                         {/* upload button */}
                         <button
                             onClick={() => fileRef.current.click()}
-                            className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border py-3 hover:bg-[#131A1F] cursor-pointer"
+                            className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border py-3 hover:bg-[var(--bg-primary)] cursor-pointer"
                         >
                             <Upload size={18} />
                             Upload Image

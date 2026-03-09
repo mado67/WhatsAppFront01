@@ -24,6 +24,9 @@ export const updateProfile = async (payload) => {
     return data;
 
 };
+export const destroyUser = async (userId) => {
+    axiosInstance.post(`/users/${userId}/destroy`);
+};
 
 // Contacts
 
@@ -66,9 +69,12 @@ export const openChatApi = async (userId) => {
 
 // Messages
 
-export const getMessages = async (chatId, config = {}) => {
-    const { data } = await axiosInstance.get(`/chats/${chatId}/messages`, config);
-    return data;
+export const getMessages = async (chatId, config = {}, cursor) => {
+    const response = await axiosInstance.get(`/chats/${chatId}/messages`, {
+        ...config,
+        params: { cursor }
+    });
+    return response;
 };
 
 export const sendMessage = async (payload) => {

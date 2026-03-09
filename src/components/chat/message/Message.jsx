@@ -88,15 +88,15 @@ const Message = function Message({ message, setSelectedReplyMessage }) {
   const containerClasses = `
     flex gap-4 flex-row-reverse
     ${selectionMode && selectionMode !== "reply" && !(selectionMode == 'delete' && message.user_id != user.id)
-      ? "p-2 cursor-pointer hover:bg-[#202c33]/40 rounded-md"
+      ? "p-2 cursor-pointer hover:bg-[var(--bg-primary)]/40 rounded-md"
       : ""}
   `;
 
   const bubbleClasses = `
-    max-w-[45%] w-fit break-all text-left rounded-lg text-sm relative
+    max-w-[45%] w-fit break-all text-left rounded-lg  text-sm relative
     flex items-end gap-2
     ${message.type === "image" ? "px-1 py-1" : "px-2 py-1"}
-    ${isMine ? "ml-auto bg-[var(--bg-secondary1)]" : "mr-auto bg-[#202c33]"}
+    ${isMine ? "ml-auto bg-[var(--bg-secondary1)] rounded-tr-[0]" : "mr-auto bg-[var(--bg-secondary1)] rounded-tl-[0]"}
   `;
 
   // =============================
@@ -138,7 +138,7 @@ const Message = function Message({ message, setSelectedReplyMessage }) {
                     <img src={`${import.meta.env.VITE_APP_URL}/storage/${message.reply_message?.file_path}`} className=" w-15 h-[90%]" />
                   ) : (
                     <div className="flex-1 min-w-0 flex items-center gap-2">
-                      <div className="w-10 h-10 rounded-lg bg-[var(--bg-primary)] flex items-center justify-center shrink-0 md:block hidden">
+                      <div className="w-10 h-10 rounded-lg  bg-[var(--bg-primary)] flex items-center justify-center shrink-0 md:block hidden">
                         <FileText size={20} className="text-gray-300 m-auto my-2" />
                       </div>
 

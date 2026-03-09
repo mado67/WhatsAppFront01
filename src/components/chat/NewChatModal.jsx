@@ -79,12 +79,12 @@ export default function NewChatModal({ onClose, contacts, setContacts }) {
     };
 
     return (
-        <div ref={menuRef} className="fixed  inset-0  bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-[#202c33] overflow-y-auto  h-[90vh]  max-w-md w-[90%] rounded-2xl shadow-xl p-6 relative animate-fadeIn">
+        <div ref={menuRef} className="fixed  inset-0 text-[var(--text-primary)]  bg-[var(--bg-secondary)]/60 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-[var(--bg-secondary)] overflow-y-auto  h-[90vh]  max-w-md w-[90%] rounded-2xl shadow-xl p-6 relative animate-fadeIn">
 
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6 ">
-                    <h2 className="text-lg font-semibold text-white">New Chat</h2>
+                    <h2 className="text-xl  font-bold text-emerald-600">New Chat</h2>
                     <button onClick={onClose} className="text-gray-400 hover:text-white cursor-pointer">
                         <X />
                     </button>
@@ -115,12 +115,12 @@ export default function NewChatModal({ onClose, contacts, setContacts }) {
                     <span className="my-2 block">OR</span>
                     <hr />
                     <div className="mt-3">
-                        <label className="text-sm text-gray-300 block mb-1">Name</label>
+                        <label className="text-sm text-[var(--text-primary)] block mb-1">Name</label>
                         <input
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
-                            className="w-full bg-[#111b21] border border-[#2a3942] rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-[#00a884]"
+                            className="w-full bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-[#00a884]"
                             placeholder="Enter contact name"
                         />
                     </div>
@@ -129,7 +129,7 @@ export default function NewChatModal({ onClose, contacts, setContacts }) {
 
                     {/* Search */}
                     <div className="p-4 border-b border-[#2a3942]">
-                        <div className="flex items-center gap-3 px-4 py-2 focus-within:border-[#25d366] border-[#2a3942] rounded-full border-2 bg-[#0b141a]">
+                        <div className="flex items-center gap-3 px-4 py-2 focus-within:border-[#25d366] border-[var(--border-secondary)] rounded-full border-2 bg-[var(--bg-secondary)]">
                             <Search size={18} className="text-gray-400" />
                             <input
                                 type="text"
@@ -150,7 +150,7 @@ export default function NewChatModal({ onClose, contacts, setContacts }) {
                                 <div
                                     key={contact.id}
                                     onClick={() => toggleSelect(contact.id)}
-                                    className="flex items-center text-left gap-3 px-3 py-2 rounded-lg hover:bg-[#0b141a] cursor-pointer transition"
+                                    className="flex items-center text-left gap-3 px-3 py-2 rounded-lg hover:bg-[var(--bg-primary)] cursor-pointer transition"
                                 >
                                     {/* Checkbox */}
                                     <div className={`w-5 h-5 rounded border-2 ${isSelected ? 'bg-[#00a884] border-[#00a884]' : 'border-gray-400'} flex items-center justify-center transition`}>
@@ -174,11 +174,11 @@ export default function NewChatModal({ onClose, contacts, setContacts }) {
                                     <Avatar src={contact.avatar} />
 
                                     <div className="flex flex-col gap-1">
-                                        <span className="text-sm font-medium text-white">
+                                        <span className="text-sm font-medium text-[var(--text-primary)]">
                                             {contact.name}
                                         </span>
                                         {contact.phone_number && (
-                                            <span className="text-xs text-gray-400 truncate max-w-xs">
+                                            <span className="text-xs text-[var(--text-secondary)] truncate max-w-xs">
                                                 {contact.phone_number}
                                             </span>
                                         )}

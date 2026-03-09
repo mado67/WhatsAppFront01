@@ -9,7 +9,7 @@ import { useChatUI } from "../../context/ChatUIContext";
 import { useActiveChat } from "../../context/ActiveChatContext";
 import { useMessages } from "../../context/MessageContext";
 import { useAuth } from "../../context/AuthContext";
-import useTheme from "../../hooks/useTheme";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function MessageInput({
   chatId,
@@ -149,7 +149,7 @@ export default function MessageInput({
       formData.append("type", "text");
       formData.append("body", text);
       formData.append("reply_to", selectedReplyMessage?.id || null);
-      formData.append("reply_message", selectedReplyMessage);
+      formData.append("reply_message", JSON.stringify(selectedReplyMessage));
       handleSendMessage(formData, 'text');
       setText("");
       setSelectedReplyMessage(null);
@@ -226,12 +226,12 @@ export default function MessageInput({
   // =============================
   return (
     <div
-      className={`bg-[var(--bg-primary)] p-3 relative ${profileOpen ? "w-[66.66%]" : "w-full p-2"
+      className={`bg-[var(--bg-primary)] p-3 relative ${profileOpen ? "w-[66.66%]" : "w-full p-2 "
         }`}
     >
       <form
         onSubmit={submitText}
-        className="flex bg-[var(--bg-secondary)] items-center gap-2 rounded-2xl relative pl-12 md:w-full  m-auto"
+        className="flex bg-[var(--bg-secondary)] items-center gap-2 rounded-2xl relative pl-12 md:w-full  m-auto z-10"
       >
         {/* file */}
         <button
@@ -302,8 +302,23 @@ export default function MessageInput({
           <SendHorizonal size={22} />
         </button>
       </form>
+      <ForwardMessages />
+      <ReplyMessage
+        selectedReplyMessage={selectedReplyMessage}
+        setSelectedReplyMessage={setSelectedReplyMessage}
+      />
+      <SelectionBar
+        handleClick={
+          selectionMode === "delete"
+            ? handleDelete
+            : selectionMode === "copy"
+              ? handleCopy
+              : selectionMode === "deleteForMe"
+                ? handleDeleteForMe
+                : null
+        }
+      />
 
-      {actionComponent}
     </div>
   );
 }

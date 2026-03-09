@@ -39,11 +39,11 @@ export default function MyProfile({ myProfile, setIsMyProfile }) {
     }
 
     return (
-        <div className="w-full h-screen bg-[#0b141a] flex absolute inset-0 z-50">
+        <div className="w-full h-screen bg-[var(--bg-secondary)]  flex absolute inset-0 z-50">
             {/* LEFT PANEL */}
-            <div className="w-[420px] border-r border-[#2a3942] bg-[#111b21] flex flex-col">
+            <div className="w-[420px] border-r border-[var(--border-color)] bg-[var(--bg-primary)] text-[var(--text-primary)]   flex flex-col">
                 {/* Header */}
-                <div className="p-4 text-gray-200 text-lg font-medium border-b border-[#2a3942] flex items-center gap-4">
+                <div className="p-4 text-[var(--text-primary)]  text-lg font-medium border-b border-[var(--border-color)]  flex items-center gap-4">
                     <ArrowLeft onClick={() => setIsMyProfile(false)} className="cursor-pointer" />
                     Profile
                 </div>
@@ -56,9 +56,9 @@ export default function MyProfile({ myProfile, setIsMyProfile }) {
                                 profileImage ? profileImage : myProfile?.avatar ? `${import.meta.env.VITE_APP_URL}/storage/${myProfile?.avatar}` : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
                                 // profileImage ? profileImage : myProfile?.avatar ? `${import.meta.env.VITE_APP_URL}/${myProfile?.avatar}` : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
                             }
-                            className="w-36 h-36 rounded-full object-cover hover:cursor-pointer hover:bg-[#202c33] "
+                            className="w-36 h-36 rounded-full object-cover hover:cursor-pointer hover:bg-[var(--bg-secondary)] "
                         />
-                        <div className="opacity-0 group-hover:opacity-100 absolute bottom-[50%] right-[50%] translate-x-1/2 translate-y-1/2 flex flex-col w-full h-full rounded-full bg-[#202c33]/60 text-xs items-center justify-center gap-2 cursor-pointer"
+                        <div className="opacity-0 group-hover:opacity-100 absolute bottom-[50%] right-[50%] translate-x-1/2 translate-y-1/2 flex flex-col w-full h-full rounded-full bg-[var(--bg-secondary)]/60 text-xs items-center justify-center gap-2 cursor-pointer"
                             onClick={() => document.querySelector("input[type=file].myProfilePhoto").click()}
                         >
                             <Image />
@@ -108,8 +108,8 @@ export default function MyProfile({ myProfile, setIsMyProfile }) {
 
             {/* RIGHT EMPTY PANEL */}
             <div className="flex-1  items-center justify-center hidden md:flex">
-                <div className="flex flex-col items-center text-gray-400 gap-3">
-                    <div className="w-20 h-20 rounded-full bg-[#202c33] flex items-center justify-center">
+                <div className="flex flex-col items-center text-[var(--text-primary)]  gap-3">
+                    <div className="w-20 h-20 rounded-full bg-[var(--bg-primary)] flex items-center justify-center">
                         <svg
                             viewBox="0 0 24 24"
                             width="32"
@@ -119,7 +119,7 @@ export default function MyProfile({ myProfile, setIsMyProfile }) {
                             <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z" />
                         </svg>
                     </div>
-                    <p className="text-lg">Profile</p>
+                    <p className="text-lg text-[var(--text-primary)] ">Profile</p>
                 </div>
             </div>
         </div>
@@ -133,18 +133,18 @@ function InfoRow({ label, value, icon, action, onClick, inputType, onChange }) {
             <div className="flex items-start gap-3">
 
                 <div className="flex flex-col gap-2 items-start">
-                    <p className="text-sm text-gray-400 mb-1">{label}</p>
+                    <p className="text-sm text-[var(--text-primary)]  mb-1">{label}</p>
                     <div className="flex items-center gap-7">
                         {icon && (
-                            <div className="text-gray-400 mt-1 cursor-pointer" >{icon}</div>
+                            <div className="text-[var(--text-primary)]  mt-1 cursor-pointer" >{icon}</div>
                         )}
-                        {inputType == label ? <input className=" border-green-400 outline-none w-full border-b-2" type="text" value={value} onChange={onChange} /> : <p className="text-gray-200">{value}</p>}
+                        {inputType == label ? <input className=" border-green-400 outline-none w-full border-b-2" type="text" value={value} onChange={onChange} /> : <p className="text-[var(--text-secondary)] ">{value}</p>}
                     </div>
                 </div>
             </div>
 
             {action && (
-                <button className="opacity-0 group-hover:opacity-100 transition text-gray-400 hover:text-white" onClick={onClick}>
+                <button className="opacity-0 group-hover:opacity-100 transition text-[var(--text-primary)]  hover:text-white" onClick={onClick}>
                     {action}
                 </button>
             )}

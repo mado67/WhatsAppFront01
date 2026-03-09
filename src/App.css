@@ -68,9 +68,9 @@ body {
 
 .shimmer {
   background: linear-gradient(90deg,
-      #1f2c33 25%,
-      #2a3942 37%,
-      #1f2c33 63%);
+      var(--bg-primary) 25%,
+      var(--bg-secondary) 37%,
+      var(--bg-primary) 63%);
   background-size: 800px 100%;
   animation: shimmer 1.6s infinite linear;
 }

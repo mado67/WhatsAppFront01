@@ -58,7 +58,7 @@ export default function EditProfilePanel({ otherUser }) {
     }
     return (
         <div
-            className={`absolute right-0 top-0 h-full xl:w-1/3 w-full bg-[#0b141a] h-screen flex flex-col
+            className={`absolute right-0 top-0 h-full xl:w-1/3 w-full bg-[var(--bg-primary)]  h-screen flex flex-col
   transition duration-300
   ${editProfileOpen ? "translate-x-0 md:translate-x-0" : "translate-x-full md:translate-x-full"}
   z-[30]`}
@@ -67,7 +67,7 @@ export default function EditProfilePanel({ otherUser }) {
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-[#2a3942]">
                 <div className="flex items-center gap-2">
-                    <button onClick={goBackPanel} className="hover:bg-[#2a3942] p-2 rounded-full cursor-pointer">
+                    <button onClick={goBackPanel} className="hover:bg-[var(--bg-secondary)]  p-2 rounded-full cursor-pointer">
                         <ArrowLeft />
                     </button>
                     <h2 className="text-lg font-medium">Edit contact</h2>
@@ -111,7 +111,7 @@ export default function EditProfilePanel({ otherUser }) {
                     <button
                         onClick={() => setChecked(!checked)}
                         className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ml-auto
-        ${checked ? "bg-[#25D366]" : "bg-gray-600"}`}
+        ${checked ? "bg-[var(--bg-secondary1)]" : "bg-[var(--bg-secondary)]"}`}
                     >
                         <div
                             className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300

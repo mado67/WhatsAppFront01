@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useChatUI } from "../../context/ChatUIContext";
 
-export default function DeletePopup({ onClose, handleDelete }) {
+export default function DeletePopup({ onClose, handleDelete, title = 'Delete ?' }) {
   const { clearSelection, setSelectedMessages } = useChatUI();
   const menuRef = useRef(null);
 
@@ -24,10 +24,10 @@ export default function DeletePopup({ onClose, handleDelete }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" >
-      <div className="bg-[#202c33] p-6 rounded-lg max-w-[480px] w-[90%] flex flex-col gap-12" ref={menuRef}>
-        <h2 className="text-lg mb-4 text-left">
-          Delete ?
+    <div className="fixed inset-0 bg-[var(--bg-primary)]/60 flex items-center justify-center z-50" >
+      <div className="bg-[var(--bg-primary)] shadow-lg p-6 rounded-lg max-w-[480px] w-[90%] flex flex-col gap-12" ref={menuRef}>
+        <h2 className="text-lg mb-4 text-[var(--text-primary)] text-left">
+          {title}
         </h2>
         <div className="flex justify-end gap-4">
           <button onClick={onClose} className="text-green-400 cursor-pointer hover:text-green-500 transition-colors hover:bg-green-500/10 px-4 py-2 rounded-3xl">

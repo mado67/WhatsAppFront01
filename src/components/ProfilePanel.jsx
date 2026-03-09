@@ -1,14 +1,16 @@
-import { Bell, Edit, Lock, MessageSquareTextIcon, Pencil, Shield, Star, X } from "lucide-react";
+import { Bell, Edit, Lock, MessageSquareTextIcon, Pencil, Shield, Star, Trash, X } from "lucide-react";
 import { useState } from "react";
-import { updateProfile } from "../api/chatApi";
+import { destroyUser, updateProfile } from "../api/chatApi";
 import { useChatList } from "../context/ChatListContext";
 import { useActiveChat } from "../context/ActiveChatContext";
 import { useChatUI } from "../context/ChatUIContext";
 import { useAuth } from "../context/AuthContext";
+import DeletePopup from "./chat/DeletePopup";
 
 export default function ProfilePanel({ otherUser }) {
   const { activeChat, setActiveChat } = useActiveChat();
-  const { openEditProfile, goBackPanel, profileOpen } = useChatUI();
+  const [showDeletePopup, setshowDeletePopup] = useState(false);
+  const { openEditProfile, goBackPanel, profileOpen, closeAllPanels } = useChatUI();
   const { setChats } = useChatList();
   const { user } = useAuth()
   const handleImageChange = async (e) => {
@@ -39,9 +41,22 @@ export default function ProfilePanel({ otherUser }) {
     );
   };
 
+
+  const handleDeleteUser = async () => {
+    try {
+      closeAllPanels()
+      setActiveChat(null)
+      setChats((prev) => prev.filter((chat) => chat.id != activeChat.id))
+      const response = await destroyUser(otherUser.id)
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
     <div
-      className={`absolute right-0 top-0 h-full xl:w-1/3 w-full bg-[#111b21]
+      className={`absolute right-0 top-0 h-full xl:w-1/3 w-full bg-[var(--bg-primary)] text-[var(--text-primary)]
   transition-transform duration-300
   ${profileOpen ? "translate-x-0 " : "translate-x-full "}
   z-[20]`}
@@ -49,19 +64,19 @@ export default function ProfilePanel({ otherUser }) {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-[#2a3942] sticky top-0">
         <div className="flex items-center gap-4">
-          <button onClick={goBackPanel} className="hover:bg-[#2a3942] p-2 rounded-full cursor-pointer">
+          <button onClick={goBackPanel} className="hover:bg-[var(--bg-secondary)] p-2 rounded-full cursor-pointer">
             <X />
           </button>
           <h2 className="text-lg font-medium">Contact info</h2>
         </div>
 
-        {user.role == 'admin' && <button onClick={openEditProfile} className="hover:bg-[#2a3942] p-2 rounded-full cursor-pointer">
+        {user.role == 'admin' && <button onClick={openEditProfile} className="hover:bg-[var(--bg-secondary)] p-2 rounded-full cursor-pointer">
           < Pencil size={18} />
         </button>}
       </div>
 
       {/* Profile Content */}
-      <div className="flex flex-col items-center py-8 border-b border-[#2a3942] relative">
+      <div className="flex flex-col items-center py-8 border-b border-[var(--border-color)] relative">
         <img
           className="w-36 h-36 rounded-full object-cover mb-4"
           src={otherUser?.avatar ? `${import.meta.env.VITE_APP_URL}/storage/${otherUser?.avatar}` : "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
@@ -82,9 +97,10 @@ export default function ProfilePanel({ otherUser }) {
         <PanelItem text="Encryption" sub="Messages are end-to-end encrypted." icon={<Lock size={18} />} />
         <PanelItem text="Encryption" sub="Messages are end-to-end encrypted." icon={<Lock size={18} />} />
         <PanelItem text="Block contact" icon={<Lock size={18} className="text-red-400" />} danger />
-        <PanelItem text="Delete contact" icon={<Lock size={18} className="text-red-400" />} danger />
+        <PanelItem text="Delete contact" icon={<Trash size={18} className="text-red-400" />} danger onClick={() => setshowDeletePopup(true)} />
       </div>
-    </div >
+      {showDeletePopup && <DeletePopup onClose={() => setshowDeletePopup(false)} handleDelete={handleDeleteUser} title='Are you sure you want to delete This user , all its related chats and messagess will be deleted' />
+      }    </div >
   );
 }
 
@@ -93,18 +109,18 @@ function PanelItem({ text, sub, toggle, onClick, icon, danger }) {
   const [checked, setChecked] = useState(false);
 
   return (
-    <div onClick={onClick} className="flex justify-between items-center py-3 border-b border-[#1f2c33] cursor-pointer hover:bg-[#2a3942] px-4 py-2 rounded-lg">
+    <div onClick={onClick} className="flex justify-between items-center py-3  border-b border-[var(--border-color)] cursor-pointer hover:bg-[var(--bg-secondary)] px-4 py-2 rounded-lg">
       <div className="flex items-center gap-2">
         {icon && icon}
-        <div className={`flex flex-col gap-1 w-fit ${danger ? "text-red-400" : "text-gray-200"}`}>
+        <div className={`flex flex-col gap-1 w-fit ${danger ? "text-red-400" : "text-[var(--text-primary)"}`}>
           <p className="w-fit">{text}</p>
-          {sub && <p className={`text-xs text-gray-400 w-fit cursor-pointer ${danger ? "text-red-400" : "text-gray-200"}`}>{sub}</p>}
+          {sub && <p className={`text-xs text-gray-400 w-fit cursor-pointer ${danger ? "text-red-400" : "text-[var(--text-primary)"}`}>{sub}</p>}
         </div>
       </div>
       {toggle && <button
         onClick={() => setChecked(!checked)}
-        className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors duration-300
-        ${checked ? "bg-[#25D366]" : "bg-gray-600"}`}
+        className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors duration-300 cursor-pointer
+        ${checked ? "bg-[var(--bg-secondary1)] " : "bg-[var(--bg-secondary)]"}`}
       >
         <div
           className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300

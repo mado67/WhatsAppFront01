@@ -18,8 +18,6 @@ const MessageContext = createContext();
 
 export function MessageProvider({ children }) {
   const messageAbortRef = useRef(null);
-  const messagesCacheRef = useRef(new Map());
-  const loadingChatIdRef = useRef(null);
   const { user, token } = useAuth();
   const { activeChat } =
     useActiveChat();
@@ -31,6 +29,7 @@ export function MessageProvider({ children }) {
   const [typingUser, setTypingUser] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [usersInChat, setUsersInChat] = useState([]);
+  const [cursor, setCursor] = useState(null);
 
 
   const typingTimeoutRef = useRef(null);
@@ -39,14 +38,6 @@ export function MessageProvider({ children }) {
   /* ================= LOAD ================= */
 
   const loadMessages = useCallback(async (chatId) => {
-    // ✅ prevent duplicate loads
-    if (loadingChatIdRef.current === chatId) return;
-
-    // ✅ serve from cache instantly
-    // if (messagesCacheRef.current.has(chatId)) {
-    //   setMessages(messagesCacheRef.current.get(chatId));
-    //   return;
-    // }
 
     // ✅ cancel previous request
     if (messageAbortRef.current) {
@@ -55,33 +46,24 @@ export function MessageProvider({ children }) {
 
     const controller = new AbortController();
     messageAbortRef.current = controller;
-    loadingChatIdRef.current = chatId;
 
     setLoadingMessages(true);
 
     try {
-      const { data } = await getMessages(chatId, {
+      const response = await getMessages(chatId, {
         signal: controller.signal,
       });
+      console.log(response);
+      const newMessages = response.data.data.reverse();
 
-      const normalized = data.reverse();
-
-      // ✅ cache it
-      messagesCacheRef.current.set(chatId, normalized);
-
-      // ✅ only set if still active
-      if (loadingChatIdRef.current === chatId) {
-        setMessages(normalized);
-      }
+      setMessages(newMessages);
+      setCursor(response.data.next_cursor);
     } catch (err) {
       if (err.name !== "CanceledError" && err.name !== "AbortError") {
         console.error(err);
       }
     } finally {
-      if (loadingChatIdRef.current === chatId) {
-        setLoadingMessages(false);
-        loadingChatIdRef.current = null;
-      }
+      setLoadingMessages(false);
     }
   }, []);
 
@@ -236,7 +218,7 @@ export function MessageProvider({ children }) {
         body: payload.get("body"),
         type,
         reply_to: payload.get("reply_to"),
-        reply_message: payload.get("reply_message"),
+        reply_message: JSON.parse(payload.get("reply_message")),
         file_path: payload.get("file_path"),
         file: payload.get("file"),
         preview: payload.get("preview"),
@@ -380,7 +362,8 @@ export function MessageProvider({ children }) {
       UserExistInChat,
       usersInChat,
       otherUser,
-
+      cursor,
+      setCursor,
     }),
     [
       messages,
@@ -394,6 +377,8 @@ export function MessageProvider({ children }) {
       UserExistInChat,
       usersInChat,
       otherUser,
+      cursor,
+      setCursor,
     ]
   );
 

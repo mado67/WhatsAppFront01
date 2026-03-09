@@ -73,7 +73,7 @@ export default function ChatsModal({ onClose }) {
             {/* Modal */}
             <div
                 ref={menuRef}
-                className={`w-full max-w-xl bg-[#111b21] rounded-2xl shadow-2xl overflow-hidden
+                className={`w-full max-w-xl bg-[var(--bg-primary)] rounded-2xl shadow-2xl overflow-hidden
         transform transition-all duration-300 ease-out
         ${show ? "translate-y-0 scale-100 opacity-100" : "translate-y-10 scale-95 opacity-0"}`}
             >
@@ -87,7 +87,7 @@ export default function ChatsModal({ onClose }) {
 
                 {/* Search */}
                 <div className="p-4 border-b border-[#2a3942]">
-                    <div className="flex items-center gap-3 px-4 py-2 focus-within:border-[#25d366] border-[#2a3942] rounded-full border-2 bg-[#0b141a]">
+                    <div className="flex items-center gap-3 px-4 py-2 focus-within:border-[#25d366] border-[#2a3942] rounded-full border-2 bg-[var(--bg-secondary)]">
                         <Search size={18} className="text-gray-400" />
                         <input
                             type="text"
@@ -109,12 +109,12 @@ export default function ChatsModal({ onClose }) {
                             <div
                                 key={chat.id}
                                 onClick={() => toggleSelect(chat.id)}
-                                className="flex items-center text-left gap-3 px-3 py-2 rounded-lg hover:bg-[#202c33] cursor-pointer transition"
+                                className="flex items-center text-left gap-3 px-3 py-2 rounded-lg hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] cursor-pointer transition"
                             >
                                 {/* Checkbox */}
-                                <div className={`w-5 h-5 rounded border-2 ${isSelected ? 'bg-[#00a884] border-[#00a884]' : 'border-gray-400'} flex items-center justify-center transition`}>
+                                <div className={`w-5 h-5 rounded border-2 ${isSelected ? 'bg-[var(--bg-secondary)] border-[#00a884]' : 'border-gray-400'} flex items-center justify-center transition`}>
                                     {isSelected && (
-                                        <div className="w-full h-full flex items-center justify-center rounded bg-[#00a884]">
+                                        <div className="w-full h-full flex items-center justify-center rounded bg-[var(--bg-secondary)]">
                                             <svg
                                                 className="w-3 h-3 text-black"
                                                 viewBox="0 0 24 24"
@@ -133,11 +133,11 @@ export default function ChatsModal({ onClose }) {
                                 <Avatar src={chat.users.find(u => u.id !== user.id)?.avatar} />
 
                                 <div className="flex flex-col gap-1">
-                                    <span className="text-sm font-medium text-white">
+                                    <span className="text-sm font-medium text-[var(--text-primary)">
                                         {chat.users.find(u => u.id !== user.id)?.name}
                                     </span>
                                     {chat.users.find(u => u.id !== user.id)?.phone_number && (
-                                        <span className="text-xs text-gray-400 truncate max-w-xs">
+                                        <span className="text-xs text-[var(--text-secondary) truncate max-w-xs">
                                             {chat.users.find(u => u.id !== user.id)?.phone_number}
                                         </span>
                                     )}
